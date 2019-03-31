@@ -1,0 +1,2 @@
+<button type="button" class="btn btn-blue btn-small status-button" data-url="{{route('proxy.validate',$proxy->id)}}"><i class="ft-refresh-cw"></i></button>
+<button type="button" class="btn btn-red btn-small remove-button" data-url="{{route('adminProxy.destroy',$proxy->id)}}" data-id="{{$proxy->id}}" data-login="{{$proxy->login}}"><i class="ft-trash-2"></i></button>

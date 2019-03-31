@@ -1,0 +1,57 @@
+<!-- Sidebar Content starts -->
+<div id="stackMenu" role="navigation" data-menu="menu-wrapper" class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-light navbar-without-dd-arrow navbar-shadow menu-border">
+    <!-- Horizontal menu content-->
+    <div data-menu="menu-container" class="navbar-container main-menu-content container center-layout">
+        <ul id="main-menu-navigation" data-menu="menu-navigation" class="nav navbar-nav">
+            <!-- First level menu -->
+            <li *ngFor="let menuItem of menuItems" [attr.data-menu]="menuItem.class === 'nav-item' ? null : 'dropdown'" [ngClass]="[menuItem.class]"
+                [routerLinkActive]="menuItem.submenu.length != 0 ? '' : 'active'" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.isExternalLink && menuItem.class === 'nav-item'">
+                    <i [ngClass]="[menuItem.icon]"></i>
+                    <span>{{menuItem.title}}</span>
+                    <span *ngIf="menuItem.badge != '' " [ngClass]="[menuItem.badgeClass]">{{menuItem.badge}}</span>
+                </a>
+                <a class="nav-link" [href]="[menuItem.path]" target="_blank" *ngIf="menuItem.isExternalLink && menuItem.class === 'nav-item'">
+                    <i [ngClass]="[menuItem.icon]"></i>
+                    <span >{{menuItem.title}}</span>
+                    <span *ngIf="menuItem.badge != '' " [ngClass]="[menuItem.badgeClass]">{{menuItem.badge}}</span>
+                </a>
+                <a data-toggle="dropdown" class="dropdown-toggle nav-link" *ngIf="menuItem.class != 'nav-item'">
+                    <i [ngClass]="[menuItem.icon]"></i>
+                    <span>{{menuItem.title}}</span>
+                </a>
+
+                <!-- Second level menu -->
+                <ul class="dropdown-menu" *ngIf="menuItem.submenu.length > 0">
+                    <li [attr.data-menu]="menuSubItem.class === 'dropdown-item' ? '' : 'dropdown-submenu'" *ngFor="let menuSubItem of menuItem.submenu"
+                        [routerLinkActive]="menuSubItem.submenu.length > 0 ? '' : 'active'" [ngClass]="menuSubItem.class  === 'dropdown dropdown-submenu' ? 'dropdown dropdown-submenu' : ''">
+                        <a data-toggle="dropdown" [ngClass]="menuSubItem.class === 'nav-link dropdown dropdown-submenu' ? 'nav-link dropdown-item dropdown-toggle' : 'dropdown-item'" [routerLink]="menuSubItem.submenu.length > 0 ? null : [menuSubItem.path]" *ngIf="!menuSubItem.isExternalLink && !menuSubItem.isDivider">
+                            <span class="">{{menuSubItem.title}}</span>
+                        </a>
+
+                        <a data-toggle="dropdown" [ngClass]="menuSubItem.class === 'nav-link dropdown dropdown-submenu' ? 'nav-link dropdown-item dropdown-toggle' : 'dropdown-item'"  [href]="[menuSubItem.path]" target="_blank" *ngIf="menuSubItem.isExternalLink && !menuSubItem.isDivider">
+                            <span class="">{{menuSubItem.title}}</span>
+                        </a>
+
+                        <div class="dropdown-divider" *ngIf="menuSubItem.isDivider"></div>
+
+                        <!-- Third level menu -->
+                        <ul class="dropdown-menu" *ngIf="menuSubItem.submenu.length > 0">
+                            <li data-menu="" data-toggle="dropdown" *ngFor="let menuSubsubItem of menuSubItem.submenu" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                                >
+                                <a data-toggle="dropdown" [ngClass]="[menuSubsubItem.class]"  [routerLink]="[menuSubsubItem.path]" *ngIf="!menuSubsubItem.isExternalLink; else externalSubSubLinkBlock">
+                                    <span class="">{{menuSubsubItem.title}}</span>
+                                </a>
+                                <ng-template #externalSubSubLinkBlock>
+                                    <a data-toggle="dropdown" [ngClass]="[menuSubsubItem.class]"  [href]="[menuSubsubItem.path]" target="_blank">
+                                        <span class="">{{menuSubsubItem.title}}</span>
+                                    </a>
+                                </ng-template>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

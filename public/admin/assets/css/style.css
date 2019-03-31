@@ -1,0 +1,114 @@
+.position-relative .form-control.form-control-lg ~ .form-control-position {
+    top: 20px;
+}
+
+/* прячим иконку просмотра флоагов */
+.dropdown-toggle-no-arrow::after,
+.dropdown-no-arrow::after{
+   display: none;
+}
+
+/*Кнопки управления*/
+.btn-small {
+    padding: 5px 10px;
+}
+
+.base-configuration td, th {
+    vertical-align: middle;
+    color: black;
+}
+
+.pay-info{
+    max-width: 680px;
+    margin: auto;
+    padding: 0;
+}
+
+.pay-text{
+    max-width: 95%;
+    margin: auto;
+    font-size: 18px;
+}
+
+.no-promotion{
+    display: none;
+}
+
+.pay-info {
+    max-width: 460px;
+    width: 100%;
+}
+
+.statistic-green,
+.statistic-green td:nth-child(2)
+{
+    color: #41a200;
+}
+
+.statistic-red,
+.statistic-red td:nth-child(2)
+{
+    color: #e53b00;
+}
+
+.base-configuration tr{
+    word-wrap:break-word;
+}
+
+.bg-bots{
+    background-color: #FFA87D !important;
+}
+
+.card-pay-block .mobile{
+    display: none;
+}
+
+
+.client-table-statistic  .mobile{
+    display: none;
+}
+
+@media(max-width: 960px){
+
+    .client-table-statistic  .mobile{
+        display: block;
+    }
+
+    .client-table-statistic  .pc{
+        display: none;
+    }
+
+    .trend-client{
+        display: none;
+    }
+}
+
+@media(max-width: 680px){
+
+    .pay-text{
+        max-width:100%;
+    }
+    .card-body {
+        padding: 0.5rem;
+    }
+}
+
+@media(max-width: 480px){
+
+    .card-pay-block input {
+        font-size: 16px;
+    }
+
+    #pay-copy{
+        padding: 0.15rem 0.65rem;
+    }
+
+    .card-pay-block .mobile{
+        display: block;
+        font-size: 24px;
+    }
+
+    .card-pay-block .pc{
+        display: none;
+    }
+}
