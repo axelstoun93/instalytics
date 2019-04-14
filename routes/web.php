@@ -133,3 +133,5 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
 
 
 });
+
+Route::get('/sms','SmsController@index');

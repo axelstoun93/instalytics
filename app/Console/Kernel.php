@@ -26,6 +26,17 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call('App\Http\Controllers\CronController@init')->dailyAt('0:01');
         $schedule->call('App\Http\Controllers\CronController@index')->everyFiveMinutes();
+
+        //Смс оповещение
+
+        //День оплаты
+        $schedule->call('App\Http\Controllers\SmsCronController@payDayNotification')->dailyAt('10:00');
+
+        //За 3 дня до оплаты
+        $schedule->call('App\Http\Controllers\SmsCronController@payDayThreeNotification')->dailyAt('10:30');
+
+
+
     }
 
     /**

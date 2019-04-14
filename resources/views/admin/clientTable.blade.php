@@ -70,7 +70,7 @@
                                         <td class="td-date">{{date('d/m/Y',strtotime($client->pay_day))}}</td>
                                         <td class="center">
                                             <button type="button" class="btn btn-success btn-small pay-button" data-url="{{route('payDay.update',$client->id)}}" data-id="{{$client->id}}" data-date="{{$client->pay_day}}"><i class="fa fa-usd"></i></button>
-                                            <a href="{{route('instagram.show',$client->id)}}" target="_blank" class="btn btn-blue btn-small edit-button"><i class="ft-eye"></i></a>
+                                            <a href="{{route('instagram.show',$client->id)}}" target="_blank" class="btn btn-blue btn-small"><i class="ft-eye"></i></a>
                                             <button type="button" class="btn btn-info btn-small edit-button"  data-url="{{route('adminClient.update',$client->id)}}" data-login="{{$client->name}}" data-id="{{$client->id}}" data-promotion="{{$client->account->promotion}}" data-category="{{$client->account->category_id}}" data-bots="{{$client->account->bots}}"><i class="ft-edit-2"></i></button>
                                             <button type="button" class="btn btn-red btn-small remove-button" data-url="{{route('adminClient.destroy',$client->id)}}" data-login="{{$client->name}}" data-id="{{$client->id}}"><i class="ft-trash-2"></i></button>
                                         </td>

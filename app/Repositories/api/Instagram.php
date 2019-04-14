@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\api;
+namespace App\Repositories\Api;
 use App\Http\Controllers\Controller;
 
 class Instagram extends Controller

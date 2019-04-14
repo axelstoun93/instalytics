@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\api;
+namespace App\Repositories\Api;
 
 class InstagramAccount extends Instagram
 {

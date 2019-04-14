@@ -37,7 +37,10 @@
                     targets: -1,
                     className: 'dt-body-right'
                 }
-            ],
+            ],"aoColumns": [
+            {"sType": "date-uk"}
+        ],
+            "order": [[ 0, "asc" ]]
 
         });
 

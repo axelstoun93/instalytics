@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repositories;
-use App\Repositories\api\InstagramAccount;
+use App\Repositories\Api\InstagramAccount;
 use App\User;
 use App\InstagramModelAccount;
 use Image;
@@ -171,5 +171,62 @@ class UserRepository extends Repository
         return ['status' => 'Произошла ошибка при удалении аккаунта' ,'type'=> 'error'];
     }
 
+
+    //Получить номера клиентов у которых подошел день оплаты
+    public function getPhoneClientPayDay(){
+
+        $readyArray[] = '79819008261';
+        $readyArray[] = '79042177096';
+        return $readyArray;
+
+
+        $readyArray = [];
+
+        $dataAssistan = new DataAssistant();
+        $nowDay = $dataAssistan::nowDay();
+        $res = $this->model->select('id','phone')->where('pay_day',$nowDay)->where('phone','!=',null)->get();
+        $res->load('account');
+
+        foreach ($res as $v){
+            if($v->account->promotion){
+                $readyArray[] = $v->phone;
+            }else{
+                continue;
+            }
+        }
+
+        $readyArray[] = '79819008261';
+        $readyArray[] = '79042177096';
+        return $readyArray;
+
+    }
+
+    //Получить номера клиентов у которых 3 дня до оплаты
+    public function getPhoneClientPayThreeDay(){
+
+        $readyArray[] = '79819008261';
+        $readyArray[] = '79042177096';
+        return $readyArray;
+
+        $readyArray = [];
+
+        $dataAssistan = new DataAssistant();
+        $threeDay = $dataAssistan::nextThreeDay();
+        $res = $this->model->select('id','phone')->where('pay_day',$threeDay)->where('phone','!=',null)->get();
+        $res->load('account');
+
+        foreach ($res as $v){
+            if($v->account->promotion){
+                $readyArray[] = $v->phone;
+            }else{
+                continue;
+            }
+        }
+
+        $readyArray[] = '79819008261';
+        $readyArray[] = '79042177096';
+        return $readyArray;
+
+    }
 
 }

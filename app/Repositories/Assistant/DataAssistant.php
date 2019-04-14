@@ -32,16 +32,34 @@ class DataAssistant
         return $date->format('d.m');
     }
 
-    //Формат даты d.m из Y-m-d
+    //Формат даты d.m.Y из Y-m-d
     static function DayAndMountFormatFull($data){
         $date = new \DateTime($data);
         return $date->format('d.m.Y');
     }
 
 
+    //Формат даты Y-m-d сегодня
+    static function nowDay(){
+        $date = new \DateTime();
+        return $date->format('Y-m-d');
+    }
+
+
+    //Формат даты Y-m-d сегодня
+    static function nextThreeDay(){
+        $date = new \DateTime();
+        $date->modify('+3 day');
+        return $date->format('Y-m-d');
+    }
 
 
 
-    
+
+
+
+
+
+
 
 }

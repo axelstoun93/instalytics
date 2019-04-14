@@ -77,7 +77,7 @@ class StatisticRepository extends Repository
                continue;
            }
 
-           if($growth <= config('setting.gluing_client_table') and $attempt <= 2){
+           if($growth <= config('setting.gluing_client_table') and $attempt < 2){
                ++$attempt;
                $lastFollower = $v->follower;
                continue;
