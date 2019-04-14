@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\InstagramModelAccount;
 use App\Statistic;
-
 Use App\Repositories\Assistant\DataAssistant;
 
 class StatisticRepository extends Repository
