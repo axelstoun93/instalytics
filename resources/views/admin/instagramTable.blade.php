@@ -46,7 +46,7 @@
                         <div class="card-content collapse show">
                             <div class="card-body card-dashboard">
                                 @if(!empty($accounts) and count($accounts) >= 1)
-                                    <table class="table table-striped base-configuration">
+                                    <table class="table table-striped all-instagram-account">
                                         <thead>
                                         <tr>
                                             <th>Аватар</th>

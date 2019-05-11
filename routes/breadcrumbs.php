@@ -54,6 +54,21 @@ Breadcrumbs::for('analyticController', function ($trail) {
     $trail->push('Общая аналитика','#');
 });
 
+//Персональные данные
+Breadcrumbs::for('policeController', function ($trail) {
+    $trail->parent('clientHome');
+    $trail->push('Политика обработки персональных данных','#');
+});
+
+Breadcrumbs::for('setting', function ($trail) {
+    $trail->push('Настройки','#');
+});
+
+
+Breadcrumbs::for('settingAccount', function ($trail) {
+    $trail->parent('setting');
+    $trail->push('Настройки аккаунта','#');
+});
 
 
 /* Админ панель клиента конец */

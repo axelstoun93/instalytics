@@ -58,12 +58,14 @@ class InstagramAccountRepository extends Repository
     //Получаем только актуальные аккаунты
     function getCurrentAccount(){
         $res = $this->model->where('promotion','=',1)->get();
+        $res->load('user');
         return $res;
     }
 
     //Получаем только актуальные аккаунты и категорию тех к кому относяться
     function getCurrentAccountandCategory($category){
         $res = $this->model->where('promotion','=',1)->where('category_id','=',$category)->get();
+        $res->load('user');
         return $res;
     }
 

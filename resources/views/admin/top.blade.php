@@ -1,18 +1,23 @@
 @extends('layouts.admin.page')
 @section('css')
 
-
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/vendors.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/forms/icheck/icheck.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/forms/icheck/custom.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/charts/morris.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/extensions/unslider.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/weather-icons/climacons.min.css">
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/tables/datatable/datatables.min.css">
+    <!-- END VENDOR CSS-->
 
     <!-- BEGIN STACK CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/app.css">
-    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/extensions/toastr.css">
-    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/plugins/extensions/toastr.css">
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/pickers/daterange/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/pickers/datetime/bootstrap-datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/pickers/pickadate/pickadate.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/extensions/toastr.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/plugins/extensions/toastr.css">
     <!-- END STACK CSS-->
 
     <!-- BEGIN Page Level CSS-->
@@ -57,9 +62,6 @@
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/pickers/pickadate/legacy.js"></script>
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/pickers/daterange/daterangepicker.js"></script>
 
-
-
-    <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/jquery.mask.min.js"></script>
-    <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/client.js"></script>
+    <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/top.js"></script>
 
 @endsection

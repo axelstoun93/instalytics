@@ -29,7 +29,7 @@ class UserRepository extends Repository
         $user->load('account');
         $user->pay_day_full =  DataAssistant::DayAndMountFormatFull($user->pay_day);
         $user->pay_day =  DataAssistant::getDayToTime($user->pay_day);
-        return   $user;
+        return $user;
     }
 
     // получить по id имя
@@ -149,6 +149,41 @@ class UserRepository extends Repository
         return ['status' => 'Произошла ошибка при обновлении даты платежа!' ,'type'=> 'error'];
     }
 
+    public function updateEditDayClient($request,$id){
+        $array = ['edit_day' => $request->edit_day];
+
+        $update = $this->model->find($id)->fill($array)->update();
+
+        $client = $this->model->find($id);
+
+        $data['date'] = date('d/m/Y',strtotime($request->edit_day));
+
+        if( $update ) {
+            return ['status' => 'Дата редактирования аккаунта '.$request->name.' успешно обновлена!' ,'type'=> 'success','data' => json_encode($data)];
+        }
+
+        return ['status' => 'Произошла ошибка при обновлении даты редактирования!' ,'type'=> 'error'];
+    }
+
+
+    public function updatePublicDayClient($request,$id){
+        $array = ['public_day' => $request->public_day];
+
+        $update = $this->model->find($id)->fill($array)->update();
+
+        $client = $this->model->find($id);
+
+        $data['date'] = date('d/m/Y',strtotime($request->public_day));
+
+        if( $update ) {
+            return ['status' => 'Дата публикации аккаунта '.$request->name.' успешно обновлена!' ,'type'=> 'success','data' => json_encode($data)];
+        }
+
+        return ['status' => 'Произошла ошибка при обновлении даты!' ,'type'=> 'error'];
+    }
+
+
+
 
     public function allClient(){
         $clients = $this->model->whereHas('role', function ($query) {
@@ -174,19 +209,11 @@ class UserRepository extends Repository
 
     //Получить номера клиентов у которых подошел день оплаты
     public function getPhoneClientPayDay(){
-
-        $readyArray[] = '79819008261';
-        $readyArray[] = '79042177096';
-        return $readyArray;
-
-
         $readyArray = [];
-
         $dataAssistan = new DataAssistant();
         $nowDay = $dataAssistan::nowDay();
         $res = $this->model->select('id','phone')->where('pay_day',$nowDay)->where('phone','!=',null)->get();
         $res->load('account');
-
         foreach ($res as $v){
             if($v->account->promotion){
                 $readyArray[] = $v->phone;
@@ -194,22 +221,12 @@ class UserRepository extends Repository
                 continue;
             }
         }
-
-        $readyArray[] = '79819008261';
-        $readyArray[] = '79042177096';
         return $readyArray;
-
     }
 
     //Получить номера клиентов у которых 3 дня до оплаты
     public function getPhoneClientPayThreeDay(){
-
-        $readyArray[] = '79819008261';
-        $readyArray[] = '79042177096';
-        return $readyArray;
-
         $readyArray = [];
-
         $dataAssistan = new DataAssistant();
         $threeDay = $dataAssistan::nextThreeDay();
         $res = $this->model->select('id','phone')->where('pay_day',$threeDay)->where('phone','!=',null)->get();
@@ -222,11 +239,34 @@ class UserRepository extends Repository
                 continue;
             }
         }
-
-        $readyArray[] = '79819008261';
-        $readyArray[] = '79042177096';
         return $readyArray;
+    }
 
+
+    //Клиент добовляет номер телефона
+    function addPhone($request,$userId){
+        $array = [];
+
+        $array = ['phone' => $request->phone , 'password' => bcrypt($request->password)];
+
+        $update = $this->model->find($userId)->fill($array)->update();
+        if( $update ) {
+            return ['status' => 'Номер телефона '.$request->name.' успешно добавлен!' ,'type'=> 'success'];
+        }
+        return ['status' => 'Произошла ошибка при добавлении номера телефона' ,'type'=> 'error'];
+    }
+
+    //Клиент обновляет настройки аккаунта
+    function updateSetting($request,$userId){
+        $array = [];
+
+        $array = ['phone' => $request->phone , 'password' => bcrypt($request->password)];
+
+        $update = $this->model->find($userId)->fill($array)->update();
+        if( $update ) {
+            return ['status' => 'Данные успешно обновлены!' ,'type'=> 'success'];
+        }
+        return ['status' => 'Произошла ошибка при обновлении данных' ,'type'=> 'error'];
     }
 
 }

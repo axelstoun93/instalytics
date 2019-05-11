@@ -47,7 +47,11 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
              ]
     ]);
 
-    Route::put('/client/pay/{id}','Admin\ClientController@payDayUpdate')->name('payDay.update');
+    Route::put('/pay/client/pay/{id}','Admin\ClientController@payDayUpdate')->name('payDay.update');
+
+    Route::post('/editDay/client/{id}','Admin\ClientController@editDayUpdate')->name('editDay.update');
+
+    Route::post('/publicDay/client/{id}','Admin\ClientController@publicDayUpdate')->name('publicDay.update');
 
 
     Route::resource('/proxy','Admin\ProxyController',[
@@ -78,13 +82,28 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
         ]
     ]);
 
-    Route::resource('/config','Admin\configController',[
+    Route::resource('/top','Admin\TopAccountController',[
+        'names' => [
+            'index' => 'adminTop',
+            'store' => 'adminTop.store',
+            'create' => 'adminTop.create',
+            'show' => 'adminTop.show',
+            'edit' => 'adminTop.edit',
+            'update' => 'adminTop.update',
+            'destroy' => 'adminTop.destroy'
+        ]
+    ]);
+
+    Route::resource('/config','Admin\ConfigController',[
         'names' => [
             'index' => 'adminConfig',
             'update' => 'adminConfig.update',
             'store' => 'adminConfig.store',
         ]
     ]);
+
+
+
 
   /*  Route::resource('/test','CronController',[
         'names' => [
@@ -130,8 +149,33 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
         ]
     ]);
 
+    Route::resource('/police','Client\PoliceController',[
+        'only' =>['index'],
+        'names' => [
+            'index' => 'police'
+        ]
+    ]);
+
+
+    //Настройки профиля клиента
+    Route::resource('/setting','Client\SettingController',[
+        'names' => [
+            'index' => 'clientSetting',
+            'store' => 'clientSetting.store',
+            'show' => 'clientSetting.show',
+            'destroy' => 'clientSetting.destroy',
+            'create' => 'clientSetting.create',
+            'edit' => 'clientSetting.edit',
+            'update' => 'clientSetting.update'
+        ]
+    ]);
+
+
+    //Обновляем номер телефона
+    Route::post('/addPhone','Client\SettingController@addPhone')->name('clientSetting.addPhone');
+
+
+
 
 
 });
-
-Route::get('/sms','SmsController@index');

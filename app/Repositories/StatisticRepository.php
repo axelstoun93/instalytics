@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\InstagramModelAccount;
+use App\Proxy;
 use App\Statistic;
 Use App\Repositories\Assistant\DataAssistant;
+Use Illuminate\Support\Facades\DB;
 
 class StatisticRepository extends Repository
 {
@@ -43,7 +45,10 @@ class StatisticRepository extends Repository
    //Выводим информацию о приростах в ввиде таблицы
    function getTableClient($id){
 
-       $res = $this->model->where('instagram_id',$id)->limit(40)->get();
+       //Получаем 40 дней назад
+       $oldDay =  \Carbon\Carbon::today()->subDays(40)->format('Y-m-d');
+
+       $res = $this->model->where('instagram_id',$id)->where('date','>=',$oldDay)->get();
 
        $ready = [];
 
@@ -97,7 +102,10 @@ class StatisticRepository extends Repository
 
     function getTable($id){
 
-        $res = $this->model->where('instagram_id',$id)->limit(40)->get();
+        //Получаем 40 дней назад
+        $oldDay =  \Carbon\Carbon::today()->subDays(40)->format('Y-m-d');
+
+        $res = $this->model->where('instagram_id',$id)->where('date','>=',$oldDay)->get();
 
         $ready = [];
 
@@ -130,22 +138,75 @@ class StatisticRepository extends Repository
 
     function notificationTable($category = null){
 
-        //Проверяем суббота или нет
-        $saturday = \Carbon\Carbon::today()->subDays(1)->format('N');
+        $accountModel = new InstagramAccountRepository(new InstagramModelAccount());
 
-        if($saturday == 6){
-            //Получаем дату которая была 4 дня назад
-            $oldDate = \Carbon\Carbon::today()->subDays(5)->format('Y-m-d');
-
-            //Сейчас
-            $nowDate = \Carbon\Carbon::today()->subDays(2)->format('Y-m-d');
+        if($category){
+            $getCurrentAccount = $accountModel->getCurrentAccountandCategory($category);
         }else{
-            //Получаем дату которая была 3 дня назад
-            $oldDate = \Carbon\Carbon::today()->subDays(4)->format('Y-m-d');
-
-            //Сейчас
-            $nowDate = \Carbon\Carbon::today()->subDays(1)->format('Y-m-d');
+            $getCurrentAccount = $accountModel->getCurrentAccount();
         }
+
+        //получаем 7 дней;
+        $jobsWeek = \Carbon\Carbon::today()->subDays(8)->format('Y-m-d');
+
+        $nowAccountDate = $this->model->where('date', '>', $jobsWeek)->whereNotIn(DB::raw("DAYOFWEEK(date)"),[7])->orderBy('date','DESC')->get();
+
+        $ready = [];
+
+        foreach ($nowAccountDate as $now){
+            $ready[$now->instagram_id][] = $now;
+        }
+
+        $readyThreeDay = [];
+
+        foreach ($ready as $key => $v){
+
+            foreach ($v as $j => $r){
+
+                if($j == 0){
+                    $readyThreeDay[$key]['lastDayGrowth'] = $r->follower;
+                    $readyThreeDay[$key]['instagram_id'] = $r->instagram_id;
+                    $readyThreeDay[$key]['growth'] = 0;
+                }
+
+                if($j == 3){
+                        $readyThreeDay[$key]['firstDayGrowth'] = $r->follower;
+                        $readyThreeDay[$key]['instagram_id'] = $r->instagram_id;
+                        $readyThreeDay[$key]['growth'] = $readyThreeDay[$key]['lastDayGrowth'] - $readyThreeDay[$key]['firstDayGrowth'];
+                }
+
+            }
+
+        }
+
+
+
+        //Делаем сверку на только продвигаймые аккаунты
+        $readyNotificationAccount = [];
+        foreach ($readyThreeDay as  $k => $now){
+
+            foreach ($getCurrentAccount as $current){
+                if($now['instagram_id'] === $current->instagram_id){
+                    if($now['growth'] < config('setting.stats_min_growth') or $current->following > config('setting.stats_min_following')){
+                        $readyNotificationAccount[] = $current;
+                    }
+                }
+                else{
+                    continue;
+                }
+            }
+
+        }
+        
+
+        return $readyNotificationAccount;
+
+    }
+
+
+    //Получаем аккаунты с маленьким приростом или с больщим количеством подписчиков
+
+    function growthTable($oldDate,$nowDate,$category = false){
 
         $accountModel = new InstagramAccountRepository(new InstagramModelAccount());
 
@@ -184,9 +245,8 @@ class StatisticRepository extends Repository
             foreach ($oldAccountDate as $old){
                 if($r->instagram_id === $old->instagram_id){
                     $growth = $r->follower - $old->follower;
-                    if($growth < config('setting.stats_min_growth') or $r->following > config('setting.stats_min_following')){
-                        $result[] = $r;
-                    }
+                    $r->growth = ($growth >= 1) ? '+'.$growth : $growth;
+                    $result[] = $r;
                 }
                 else{
                     continue;
@@ -195,6 +255,10 @@ class StatisticRepository extends Repository
         }
 
         return $result;
+
+
+
+
 
     }
 

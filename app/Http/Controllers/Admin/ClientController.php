@@ -61,7 +61,6 @@ class ClientController extends AdminController
     {
         if($request->isMethod('post')) {
 
-
             //устанавливаем дефолтный пароль
             if(empty($request->password)){
                 $request->password = config('setting.default-password');
@@ -193,6 +192,63 @@ class ClientController extends AdminController
                 die;
             }
             $result = $this->u_rep->updatePayDayClient($request,$id);
+            if($result){
+                echo  json_encode($result);
+            }
+        }
+    }
+
+
+    //Дата правок
+    public function editDayUpdate(Request $request, $id)
+    {
+        if($request->isMethod('post')) {
+
+            $validate = Validator::make($request->all(),
+                [
+                    'edit_day'=> 'required',
+                ]);
+            if($validate->fails())
+            {
+                $error = [];
+                $response = $validate->messages();
+                foreach ($response->all() as $key => $value)
+                {
+                    $error[$key] = ['status' => $value ,'type'=> 'error'];
+                }
+                echo  json_encode($error);
+                die;
+            }
+            $result = $this->u_rep->updateEditDayClient($request,$id);
+            if($result){
+                echo  json_encode($result);
+            }
+        }
+    }
+
+
+
+    //Дата публикации
+    public function publicDayUpdate(Request $request, $id)
+    {
+        if($request->isMethod('post')) {
+
+            $validate = Validator::make($request->all(),
+                [
+                    'public_day'=> 'required',
+                ]);
+            if($validate->fails())
+            {
+                $error = [];
+                $response = $validate->messages();
+                foreach ($response->all() as $key => $value)
+                {
+                    $error[$key] = ['status' => $value ,'type'=> 'error'];
+                }
+                echo  json_encode($error);
+                die;
+            }
+            $result = $this->u_rep->updatePublicDayClient($request,$id);
             if($result){
                 echo  json_encode($result);
             }

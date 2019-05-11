@@ -196,11 +196,71 @@
                 </div>
             </section>
             @endif
+
+
+
+        <section id="basic-examples">
+            <div class="row match-height">
+                {{--<div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img class="card-img-top img-fluid" src="admin/images/button.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Card title</h4>
+                                <p class="card-text">Icing powder caramels macaroon. Toffee sugar plum brownie pastry gummies jelly.</p>
+                                <a href="#" class="btn btn-outline-teal">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img class="card-img-top img-fluid" src="admin/images/button_two.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Card title</h4>
+                                <p class="card-text">Icing powder caramels macaroon. Toffee sugar plum brownie pastry gummies jelly.</p>
+                                <a href="#" class="btn btn-outline-teal">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>--}}
+
+
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="card">
+                        <a href="https://www.mbazarov.ru/instagramconsulting" target="_blank">
+                            <div class="card-content">
+                                <div class="card-body text-center">
+                                    <img class="card-img img-fluid mb-1" src="admin/images/button.jpg" alt="Card image cap">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="card">
+                        <a href="https://www.mbazarov.ru/recomendations" target="_blank">
+                            <div class="card-content">
+                                <div class="card-body text-center">
+                                    <img class="card-img img-fluid mb-1" src="admin/images/button_two.jpg" alt="Card image cap">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
     </div>
 </div>
 
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/all/clipboard.min.js"></script>
-
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/vendors.min.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/core/app-menu.js"></script>
@@ -217,12 +277,10 @@
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/pickers/pickadate/legacy.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/pickers/daterange/daterangepicker.js"></script>
 
-
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/all/jquery.mask.min.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/charts/echarts/echarts.js"></script>
-
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/client/statistic.js"></script>
-
+<script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/client/client.js"></script>
 
 
 <!-- 2. Include library -->
@@ -382,5 +440,8 @@
 
     })(window, document, jQuery);
 </script>
+
+
+
 
 

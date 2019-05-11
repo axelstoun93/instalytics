@@ -12,6 +12,8 @@
 
     <!-- BEGIN STACK CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/extensions/toastr.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/plugins/extensions/toastr.css">
     <!-- END STACK CSS-->
 
     <!-- BEGIN Page Level CSS-->
@@ -38,9 +40,15 @@
 @section('content')
     {!! $content !!}
 @endsection
+
+
+
 @section('script')
 
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/vendors.min.js"></script>
+    <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/extensions/toastr.min.js"></script>
+    <script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/scripts/extensions/toastr.js"></script>
+    <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/jquery.mask.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBDkKetQwosod2SZ7ZGCpxuJdxY3kxo5Po"></script>
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/charts/gmaps.min.js"></script>
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
@@ -51,6 +59,11 @@
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/charts/echarts/echarts.js"></script>
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/core/app-menu.js"></script>
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/core/app.js"></script>
+
+
+
+    <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/client/client.js"></script>
+
     <script>
 
 
@@ -114,4 +127,8 @@
 
     </script>
 
+@endsection
+
+@section('noPhone')
+    {!! (!empty($noPhone)) ? $noPhone : '' !!}
 @endsection

@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Repositories\StatisticRepository;
 use App\Statistic;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Repositories\AdminMenuRepository;
 use App\AdminMenu;
+use App\Repositories\StatisticRepository;
 use App\Repositories\InstagramCategoryRepository;
 use App\InstagramAccountCategory;
 
-class IndexController extends AdminController
+class TopAccountController extends AdminController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     protected $s_rep;
     protected $c_rep;
 
@@ -26,19 +26,24 @@ class IndexController extends AdminController
         parent::__construct( new AdminMenuRepository(new AdminMenu));
         $this->s_rep = new StatisticRepository(new Statistic());
         $this->c_rep = new InstagramCategoryRepository(new InstagramAccountCategory());
-        $this->template = 'index';
+        $this->template = 'top';
     }
 
     public function index(Request $request)
     {
+        $oldDate = \Carbon\Carbon::today()->subDays(32)->format('Y-m-d');
+        $nowDate = \Carbon\Carbon::today()->subDays(1)->format('Y-m-d');
 
-        if(!empty($request->category)){
-            $account = $this->s_rep->notificationTable($request->category);
+        if(!empty($request->start_date) and !empty($request->end_date)){
+            $account = $this->s_rep->growthTable($request->start_date,$request->end_date,$request->category);
         }else{
-            $account = $this->s_rep->notificationTable();
+            $account = $this->s_rep->growthTable($oldDate,$nowDate,$request->category);
         }
+
+
         $category = $this->c_rep->all();
-        $content = view(config('setting.theme-admin').'.indexContent')->with(['accounts' => $account,'category' => $category])->render();
+
+        $content = view(config('setting.theme-admin').'.topContent')->with(['accounts' => $account,'category' => $category,'oldDate' => $oldDate,'nowDate' => $nowDate])->render();
         $this->vars = array_add($this->vars,'content',$content);
         return $this->renderOutput();
     }

@@ -42,5 +42,10 @@
 @section('content')
     {!! $content !!}
 @endsection
+
+@section('noPhone')
+    {!! (!empty($noPhone)) ? $noPhone : '' !!}
+@endsection
+
 @section('script')
 @endsection

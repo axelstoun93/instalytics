@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->date('pay_day')->nullable();
+            $table->date('edit_day')->nullable();
+            $table->date('public_day')->nullable();
             $table->string('phone',11)->nullable();
             $table->timestamps();
         });

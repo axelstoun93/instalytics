@@ -8,13 +8,13 @@ class DataAssistant
     //Функция получения количества дней
     static function getDayToTime($date)
     {
-        $time =  strtotime ( $date);
+        $time =  strtotime ($date);
         $nowTime = time();
         if(time() < $time)
         {
             $res = $time - $nowTime;
             $day = $res/60/60/24;
-            return (int)floor($day);
+            return (int)(floor($day) + 1);
         }
         return false;
     }

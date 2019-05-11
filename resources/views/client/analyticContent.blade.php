@@ -69,7 +69,7 @@
         </div>
         @endif
 
-
+       @if(!empty($client))
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -130,7 +130,9 @@
                 </div>
             </div>
         </div>
-
+            @endif
     </div>
 </div>
+
+
 

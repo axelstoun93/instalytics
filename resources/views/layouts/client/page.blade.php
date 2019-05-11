@@ -44,7 +44,7 @@
             <ul class="nav navbar-nav flex-row position-relative">
                 <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item mr-auto"><a class="navbar-brand" href="{{route('client')}}"><img class="brand-logo" alt="stack admin logo" src="{{asset(config('setting.theme-admin'))}}/app-assets/images/logo/stack-logo-light.png">
-                        <h2 class="brand-text">Stack</h2></a></li>
+                        <h2 class="brand-text">Instalytics</h2></a></li>
                 <li class="nav-item d-none d-md-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white" data-ticon="ft-toggle-right"></i></a></li>
                 <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-ellipsis-v"></i></a></li>
             </ul>
@@ -77,6 +77,9 @@
 </footer>
 
 @yield('script')
+
+@yield('noPhone')
+
 
 </body>
 </html>

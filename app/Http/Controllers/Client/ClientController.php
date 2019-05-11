@@ -23,8 +23,8 @@ abstract class ClientController extends Controller
 
     public function renderOutput()
     {
-
         $menu = $this->getMenu();
+
         $userInfo = $this->u_rep->clientInfo(Auth::id());
 
         $navigation = view('layouts.'.config('setting.theme-client').'.navigation')->with('userInfo',$userInfo)->render();
@@ -32,6 +32,11 @@ abstract class ClientController extends Controller
 
         $leftMenu = view('layouts.'.config('setting.theme-client').'.leftMenuBar')->with('menu',$menu)->render();
         $this->vars = array_add($this->vars,'leftMenu', $leftMenu);
+
+          if(empty($userInfo->phone)){
+              $noPhone = view('layouts.'.config('setting.theme-client').'.noPhone')->render();
+              $this->vars = array_add($this->vars,'noPhone', $noPhone);
+          }
 
         return view(config('setting.theme-client').'.'.$this->template)->with($this->vars);
 
@@ -59,15 +64,7 @@ abstract class ClientController extends Controller
                 }
             }
         })->sortBy('order');
-
-
         return $mBuilder;
     }
-
-
-    public function getUserInfo(){
-
-    }
-
 
 }

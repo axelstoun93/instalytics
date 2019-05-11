@@ -55,6 +55,7 @@
                                         <th>Аккаунт</th>
                                         <th>Аккаунт_старый</th>
                                         <th>Телефон</th>
+                                        <th>Правки</th>
                                         <th>Дата оплаты</th>
                                         <th>Действия</th>
                                     </tr>
@@ -67,6 +68,7 @@
                                         <td>{{$client->account->login}}</td>
                                         <td>{{$client->account->old_login}}</td>
                                         <td class="phone">{{$client->phone}}</td>
+                                        <td>{{(!empty($client->edit_day)) ? date('d/m/Y',strtotime($client->edit_day)) : ''}}</td>
                                         <td class="td-date">{{date('d/m/Y',strtotime($client->pay_day))}}</td>
                                         <td class="center">
                                             <button type="button" class="btn btn-success btn-small pay-button" data-url="{{route('payDay.update',$client->id)}}" data-id="{{$client->id}}" data-date="{{$client->pay_day}}"><i class="fa fa-usd"></i></button>
@@ -84,6 +86,7 @@
                                         <th>Аккаунт</th>
                                         <th>Аккаунт_старый</th>
                                         <th>Телефон</th>
+                                        <th>Правки</th>
                                         <th>Дата оплаты</th>
                                         <th>Действия</th>
                                     </tr>

@@ -1,44 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Client;
 
-use App\Repositories\StatisticRepository;
-use App\Statistic;
 use Illuminate\Http\Request;
-use App\Repositories\AdminMenuRepository;
-use App\AdminMenu;
-use App\Repositories\InstagramCategoryRepository;
-use App\InstagramAccountCategory;
+use App\Repositories\ClientMenuRepository;
+use App\ClientMenu;
 
-class IndexController extends AdminController
+class PoliceController extends ClientController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     protected $s_rep;
-    protected $c_rep;
+    protected $page;
 
     function __construct()
     {
-        parent::__construct( new AdminMenuRepository(new AdminMenu));
-        $this->s_rep = new StatisticRepository(new Statistic());
-        $this->c_rep = new InstagramCategoryRepository(new InstagramAccountCategory());
-        $this->template = 'index';
+        parent::__construct( new ClientMenuRepository(new ClientMenu));
+        $this->template = 'police';
     }
 
-    public function index(Request $request)
-    {
 
-        if(!empty($request->category)){
-            $account = $this->s_rep->notificationTable($request->category);
-        }else{
-            $account = $this->s_rep->notificationTable();
-        }
-        $category = $this->c_rep->all();
-        $content = view(config('setting.theme-admin').'.indexContent')->with(['accounts' => $account,'category' => $category])->render();
+    public function index()
+    {
+        $this->page = 'Политика обработки персональных данных';
+
+        $content = view(config('setting.theme-client').'.policeContent')->with(['page' => $this->page])->render();
         $this->vars = array_add($this->vars,'content',$content);
         return $this->renderOutput();
     }
