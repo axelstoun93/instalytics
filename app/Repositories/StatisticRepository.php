@@ -166,12 +166,14 @@ class StatisticRepository extends Repository
                 if($j == 0){
                     $readyThreeDay[$key]['lastDayGrowth'] = $r->follower;
                     $readyThreeDay[$key]['instagram_id'] = $r->instagram_id;
+                    $readyThreeDay[$key]['following'] = $r->following;
                     $readyThreeDay[$key]['growth'] = 0;
                 }
 
                 if($j == 3){
                         $readyThreeDay[$key]['firstDayGrowth'] = $r->follower;
                         $readyThreeDay[$key]['instagram_id'] = $r->instagram_id;
+                        $readyThreeDay[$key]['following'] = $r->following;
                         $readyThreeDay[$key]['growth'] = $readyThreeDay[$key]['lastDayGrowth'] - $readyThreeDay[$key]['firstDayGrowth'];
                 }
 
@@ -187,7 +189,7 @@ class StatisticRepository extends Repository
 
             foreach ($getCurrentAccount as $current){
                 if($now['instagram_id'] === $current->instagram_id){
-                    if($now['growth'] < config('setting.stats_min_growth') or $current->following > config('setting.stats_min_following')){
+                    if($now['growth'] < config('setting.stats_min_growth') or $now['following'] > config('setting.stats_min_following')){
                         $readyNotificationAccount[] = $current;
                     }
                 }
