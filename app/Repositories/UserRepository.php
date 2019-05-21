@@ -66,10 +66,9 @@ class UserRepository extends Repository
 
             $client = $this->model->create([
                 'name' => $request->name,
-                'password' => bcrypt($request->password),
+                'password' => bcrypt(trim($request->password)),
                 'phone' => $request->phone,
                 'pay_day' => $request->pay_day,
-
             ]);
 
             if($client) {
