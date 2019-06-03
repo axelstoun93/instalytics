@@ -5,7 +5,7 @@ use App\Repositories\Api\InstagramAccount;
 use App\User;
 use App\InstagramModelAccount;
 use Image;
-
+use Illuminate\Support\Facades\Hash;
 use App\Repositories\Assistant\DataAssistant;
 
 class UserRepository extends Repository
@@ -66,7 +66,7 @@ class UserRepository extends Repository
 
             $client = $this->model->create([
                 'name' => $request->name,
-                'password' => bcrypt(trim($request->password)),
+                'password' => Hash::make(trim($request->password)),
                 'phone' => $request->phone,
                 'pay_day' => $request->pay_day,
             ]);
@@ -109,9 +109,9 @@ class UserRepository extends Repository
         $array = [];
 
         if(!empty($request->phone)){
-            $array = ['name' => $request->name , 'password' => bcrypt($request->password),'phone'=> $request->phone];
+            $array = ['name' => $request->name , 'password' => Hash::make(trim($request->password)),'phone'=> $request->phone];
         }else{
-            $array = ['name' => $request->name , 'password' => bcrypt($request->password)];
+            $array = ['name' => $request->name , 'password' => Hash::make(trim($request->password))];
         }
 
         $instagramRepository = new InstagramAccountRepository(new InstagramModelAccount());

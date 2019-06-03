@@ -119,6 +119,8 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
 
     Route::get('/init','CronController@init');*/
 
+    //Route::get('/cronIndex','CronController@index');
+
 
 
 

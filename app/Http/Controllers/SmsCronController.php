@@ -24,7 +24,7 @@ class SmsCronController extends Controller
             $phone = $this->u_rep->getPhoneClientPayDay();
             if($phone and !empty($phone)){
                 $smsaero_api = new SmsaeroApiV2(); // api_key из личного кабинета
-                $smsaero_api->send($phone,'Добрый день.Сегодня крайний день продвижения,завтра работа с аккаунтом будет завершена.Нужно продлить доступ и отправить чек.', 'DIRECT');
+                $smsaero_api->send($phone,'Через 3 дня продвижение завершится.Нужно продлить доступ, прислать чек', 'DIRECT');
             }
         }
     }
@@ -35,7 +35,7 @@ class SmsCronController extends Controller
             $phone = $this->u_rep->getPhoneClientPayThreeDay();
             if($phone and !empty($phone)){
                 $smsaero_api = new SmsaeroApiV2(); // api_key из личного кабинета
-                $smsaero_api->send($phone,'Добрый день. Через 3 дня заканчивается срок инстаграм-продвижения. Необходимо продлить доступ.Посмотрите статистику в личном кабинете. Логин - ваш инстаграм, пароль: promotion', 'DIRECT');
+                $smsaero_api->send($phone,'Добрый день.Сегодня продвижение отключится.Пришлите пожалуйста квитанцию об оплате или сообщите о завершении работы.', 'DIRECT');
             }
         }
     }
