@@ -39,8 +39,12 @@
                                             <div class="form-control-position">
                                                 <i class="fa fa-key"></i>
                                             </div>
+                                            <div class="alert alert-icon-right alert-info alert-dismissible mb-2" role="alert">
+                                                Если вы меняли логин в инстаграме, для входа в личный кабинет логин не меняется, необходимо использовать прежний логин
+                                            </div>
                                         </fieldset>
                                         <div class="form-group row">
+
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Вход</button>
                                     </form>
