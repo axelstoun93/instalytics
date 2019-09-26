@@ -12,8 +12,6 @@ class InstagramAccountRepository extends Repository
         $this->model = $instagramAccount;
     }
 
-
-
     function addInstagramAccount(InstagramAccount $instagramAccount,$category,$user_id,$bots){
 
         $account = $this->model->create([
@@ -61,6 +59,15 @@ class InstagramAccountRepository extends Repository
         $res->load('user');
         return $res;
     }
+
+
+    //Получаем актуальные аккаунты у которых подписчиков <= 10000
+    function getCurrentAccountLimitFollower($init){
+        $res = $this->model->where('promotion','=',1)->where('follower','<=',$init)->get();
+        $res->load('user');
+        return $res;
+    }
+
 
     //Получаем только актуальные аккаунты и категорию тех к кому относяться
     function getCurrentAccountandCategory($category){

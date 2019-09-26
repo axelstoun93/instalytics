@@ -136,7 +136,7 @@
 
 
 
-    
+
     function send(url,data) {
 
             $.ajax({
@@ -427,8 +427,8 @@
            name = $(this).data('login');
            nameBlock = $('#remove-name');
 
-            nameBlock.empty();
-            nameBlock.text(name);
+           nameBlock.empty();
+           nameBlock.text(name);
 
             $('#removeModal').modal('show');
         });

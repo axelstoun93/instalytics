@@ -70,6 +70,21 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
     Route::post('proxy/validate/{id}/','Admin\ProxyController@statusProxy')->name('proxy.validate');
 
 
+    Route::resource('/donor','Admin\InstagramDonorController',[
+        'names' => [
+            'index' => 'adminDonor',
+            'store' => 'adminDonor.store',
+            'show' => 'adminDonor.show',
+            'destroy' => 'adminDonor.destroy',
+            'create' => 'adminDonor.create',
+            'edit' => 'adminDonor.edit',
+            'update' => 'adminDonor.update'
+        ]
+    ]);
+
+    Route::post('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.validate');
+    //Route::get('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.getValidate');
+
     Route::resource('/instagram','Admin\InstagramController',[
         'names' => [
             'index' => 'instagram',
@@ -116,16 +131,14 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
             'update' => 'CronController.update'
         ]
     ]);
-
-    Route::get('/init','CronController@init');*/
-
-    //Route::get('/cronIndex','CronController@index');
-
-
-
+*/
 
 });
 
+/*Route::get('/init','CronController@init');
+Route::get('/getTask','CronController@getTask');
+Route::get('/getAndroidTask','CronController@getAndroidTask');*/
+Route::get('/deleteTest','CronController@clearFollowerUserList');
 
 /* Клиент */
 Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function ()
@@ -176,8 +189,9 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
     //Обновляем номер телефона
     Route::post('/addPhone','Client\SettingController@addPhone')->name('clientSetting.addPhone');
 
-
-
-
-
 });
+
+
+/* Общий ajax контроллер */
+
+Route::post('/ajax/FollowUnfollowAccount/{id}','AjaxController@getFollowUnfollowAccount')->name('FollowUnfollowAccount');

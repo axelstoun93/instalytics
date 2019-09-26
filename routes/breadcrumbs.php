@@ -32,6 +32,11 @@ Breadcrumbs::for('adminProxy', function ($trail) {
     $trail->push('Прокси','#');
 });
 
+Breadcrumbs::for('adminDonor', function ($trail) {
+    $trail->parent('adminConfig');
+    $trail->push('Доноры','#');
+});
+
 Breadcrumbs::for('adminAllConfig', function ($trail) {
     $trail->parent('adminConfig');
     $trail->push('Общие настройки','#');

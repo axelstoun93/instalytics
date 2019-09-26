@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\InstagramModelAccount;
+use App\Repositories\FollowListRepository;
+use App\Repositories\UnFollowListRepository;
+use App\UnFollowList;
+use App\FollowList;
 use Illuminate\Http\Request;
 use App\Repositories\AdminMenuRepository;
 use App\Repositories\InstagramAccountRepository;
@@ -25,6 +29,8 @@ class InstagramController extends AdminController
     protected $a_rep;
     protected $s_rep;
     protected $c_rep;
+    protected $follow_rep;
+    protected $unfollow_rep;
 
 
     function __construct()
@@ -33,6 +39,8 @@ class InstagramController extends AdminController
         $this->a_rep = new InstagramAccountRepository(new InstagramModelAccount());
         $this->s_rep = new StatisticRepository(new Statistic());
         $this->c_rep = new InstagramCategoryRepository(new InstagramAccountCategory());
+        $this->follow_rep = new FollowListRepository(new FollowList());
+        $this->unfollow_rep = new UnFollowListRepository(new UnFollowList());
         $this->template = 'instagram';
     }
 
@@ -83,14 +91,22 @@ class InstagramController extends AdminController
         $this->page = 'Статистика';
 
         $client = $this->u_rep->clientInfo($id);
-        $category = $this->c_rep->all();
 
-        $statistic = $this->s_rep->getTable($client->account->instagram_id);
-        $clientStatistic = $this->s_rep->getTableClient($client->account->instagram_id);
+        $instagramId = $client->account->instagram_id;
 
-        $info = $this->s_rep->getDataLast($client->account->instagram_id);
+        $client = $this->u_rep->clientInfo($id);
 
-        $content = view(config('setting.theme-admin').'.instagramShow')->with(['page' => $this->page, 'client' => $client,'statistic' => $statistic,'clientStatistic' => $clientStatistic ,'info' => $info])->render();
+        $statistic = $this->s_rep->getTableClient($instagramId);
+
+        $info = $this->s_rep->getDataLast($instagramId);
+
+        $follow = $this->follow_rep->getFollowListDay($instagramId);
+
+        $unfollow = $this->unfollow_rep->getUnfollowListDay($instagramId);
+
+        $followListDate = $this->follow_rep->getFollowListDate($instagramId);
+
+        $content = view(config('setting.theme-admin').'.instagramShow')->with(['page' => $this->page, 'client' => $client,'statistic' => $statistic ,'info' => $info,'follow' => $follow,'unfollow' => $unfollow,'followListDate' => $followListDate])->render();
         $this->vars = array_add($this->vars,'content',$content);
         return $this->renderOutput();
     }

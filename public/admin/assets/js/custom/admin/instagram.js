@@ -30,7 +30,7 @@
         });
 
 
-       var test = $('.base-configuration').DataTable({
+       var base = $('.base-configuration').DataTable({
             "pageLength": 30,
             'lengthMenu': [ [7,14,30,40], [7,14,30,40] ],
             "language": {
@@ -70,45 +70,7 @@
 
         });
 
-
-       test.column(1).data().sum();
-
-
-        $('.base-configuration-client').DataTable({
-            "pageLength": 40,
-            'lengthMenu': [ [40], [40] ],
-            "language": {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
-            },
-            columnDefs: [
-                { type: 'date-eu', targets: 0 }
-            ],"aoColumns": [
-                {"sType": "date-eu"},
-                null,
-                null
-            ],
-            "order": [[ 0, "asc" ]]
-
-        });
+        base.column(1).data().sum();
 
     });
 
@@ -117,37 +79,80 @@
 
     $(document).ready(function() {
         sortLogic();
+        categorySelectLogic();
+
+        var followUnfollowBlock = $('#follow-unfollow-block');
+
+
+        function categorySelectLogic() {
+            $( "#categorySelect").on('change', function() {
+                if(!!$(this).find(":selected").val()){
+                    window.location.replace($(this).find(":selected").val());
+                }
+            });}
+
+
+        getFollowUnfollowList();
+        function getFollowUnfollowList(){
+            $( "#dataFollowUnfollowSelect").on('change', function() {
+                if(!!$(this).find(":selected").val()){
+                    var date = $(this).find(":selected").val();
+                    var url = $(this).attr('data-url');
+                    sendFollowUnfollowList(url,date);
+                }
+            });
+        }
+
+
+
+        function sendFollowUnfollowList(url,date) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: url,             // указываем URL и
+                data:{date:date},
+                dataType : 'html',
+                method:'POST',
+                asyns:false,
+                success: function (e) {
+                    followUnfollowBlock.empty();
+                    followUnfollowBlock.html(e);
+                },
+                error:function (e) {
+                    toastr.error('Не удалось получить данные!', 'Оповещение!', {"progressBar": true});
+                }
+            });
+
+        }
+
+        function sortLogic() {
+
+            $('.hiddenBots').click(function() {
+                if($(".hiddenBots").is(':checked')){
+                    $('.base-configuration tr').each(function (i,element) {
+                        if($(element).hasClass('bg-bots')){
+                            $(element).hide();
+                        }
+                    });
+                }else{
+                    $('.base-configuration tr').each(function (i,element) {
+                        if($(element).hasClass('bg-bots')){
+                            $(element).show();
+                        }
+                    });
+                }
+            });
+        }
+
     });
 
 
-    function sortLogic() {
-
-        $('.hiddenBots').click(function() {
-            if($(".hiddenBots").is(':checked')){
-                $('.base-configuration tr').each(function (i,element) {
-                    if($(element).hasClass('bg-bots')){
-                        $(element).hide();
-                    }
-                });
-            }else{
-                $('.base-configuration tr').each(function (i,element) {
-                    if($(element).hasClass('bg-bots')){
-                        $(element).show();
-                    }
-                });
-            }
-        });
-
-    }
 
 
-    categorySelectLogic();
-    function categorySelectLogic() {
-        $( "#categorySelect").on('change', function() {
-            if(!!$(this).find(":selected").val()){
-                window.location.replace($(this).find(":selected").val());
-            }
-        });}
+
+
+
 
 
 

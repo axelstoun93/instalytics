@@ -23,8 +23,7 @@ class UserRepository extends Repository
     }
 
     // метод получения информации о клиенте
-    function clientInfo ($id)
-    {
+    function clientInfo ($id){
         $user = $this->model->find($id);
         $user->load('account');
         $user->pay_day_full =  DataAssistant::DayAndMountFormatFull($user->pay_day);
@@ -33,10 +32,15 @@ class UserRepository extends Repository
     }
 
     // получить по id имя
-    function getNameID($id)
-    {
+    function getNameID($id){
       $res = $this->model->select('id')->find($id);
       return $res;
+    }
+
+    function getInstagramId($id){
+        $res = $this->model->select('id')->find($id);
+        $res->load('account');
+        return $res;
     }
 
     // Добавить клиента

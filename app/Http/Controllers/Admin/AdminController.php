@@ -40,6 +40,7 @@ abstract class AdminController extends Controller
     public function getMenu()
     {
         $menu = $this->m_rep->all();
+
         $mBuilder = Menu::make('menu', function($m) use ($menu) {
             foreach($menu as $item) {
                 if($item->parent_id == 0) {

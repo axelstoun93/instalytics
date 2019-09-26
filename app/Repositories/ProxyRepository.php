@@ -46,6 +46,12 @@ class ProxyRepository extends Repository
         return $res;
     }
 
+    public function getValidateProxyFirst()
+    {
+        $res = $this->model->where('status', 1)->first();
+        return $res;
+    }
+
     function proxyGetStatus($login,$password,$ip,$port){
 
         $ch = curl_init();
@@ -72,8 +78,23 @@ class ProxyRepository extends Repository
         return $setting;
     }
 
+
+
     public function delete($id){
         $proxy = $this->model->find($id);
+
+        $donors = $proxy->donors()->get();
+
+        if(!empty($donors)){
+            $name = [];
+            foreach ($proxy->donors()->select('name')->get() as $v){
+                $name[] = $v->name;
+            }
+            $donorList = implode(',',$name);
+            return ['status' => "Перед удалением этого прокси нужно отвязать от него доноров ($donorList)",'type'=> 'error'];
+            die;
+        }
+
         if($proxy->delete()) {
             return ['status' => "Прокси {$proxy->name} успешно удален.",'type'=> 'success'];
         }else

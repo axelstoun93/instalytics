@@ -24,18 +24,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
         $schedule->call('App\Http\Controllers\CronController@init')->dailyAt('0:01');
-        $schedule->call('App\Http\Controllers\CronController@index')->everyFiveMinutes();
 
-        //Смс оповещение
+        //Получаем данные
+        $schedule->call('App\Http\Controllers\CronController@getTask')->everyFiveMinutes();
 
-        //День оплаты
-        $schedule->call('App\Http\Controllers\SmsCronController@payDayNotification')->dailyAt('10:00');
+        //Получаем данные по ANDROID API - каждые 3 минуты
+        $schedule->call('App\Http\Controllers\CronController@getAndroidTask')->cron("*/3 * * * *");
 
-        //За 3 дня до оплаты
-        $schedule->call('App\Http\Controllers\SmsCronController@payDayThreeNotification')->dailyAt('10:30');
-
-
+        //Чистим таблицу follower_user_list
+        $schedule->call('App\Http\Controllers\CronController@clearFollowerUserList')->cron("0 */3 * * *");
 
     }
 

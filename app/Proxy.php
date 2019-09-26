@@ -10,4 +10,8 @@ class Proxy extends Model
     protected $fillable = [
         'id','name','password','ip','port','status'
     ];
+
+    public function donors(){
+        return $this->hasMany('App\InstagramDonor','proxy_id','id');
+    }
 }

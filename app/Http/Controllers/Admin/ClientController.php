@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\Assistant\DataAssistant;
 use App\Repositories\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -23,16 +24,14 @@ class ClientController extends AdminController
      *
      * @return \Illuminate\Http\Response
      */
-    function __construct()
-    {
+    function __construct(){
         parent::__construct( new AdminMenuRepository(new AdminMenu));
         $this->u_rep = new UserRepository(new User());
         $this->c_rep = new InstagramCategoryRepository(new InstagramAccountCategory());
         $this->template = 'client';
     }
 
-    public function index()
-    {
+    public function index(){
         $this->page = 'Клиенты';
         $clients = $this->u_rep->allClient();
         $category = $this->c_rep->all();

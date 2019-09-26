@@ -61,6 +61,42 @@
 
         }
 
+        var followUnfollowBlock = $('#follow-unfollow-block');
+
+        getFollowUnfollowList();
+        function getFollowUnfollowList(){
+            $( "#dataFollowUnfollowSelect").on('change', function() {
+                if(!!$(this).find(":selected").val()){
+                    var date = $(this).find(":selected").val();
+                    var url = $(this).attr('data-url');
+                    sendFollowUnfollowList(url,date);
+                }
+            });
+        }
+
+        function sendFollowUnfollowList(url,date) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: url,             // указываем URL и
+                data:{date:date},
+                dataType : 'html',
+                method:'POST',
+                asyns:false,
+                success: function (e) {
+                    followUnfollowBlock.empty();
+                    followUnfollowBlock.html(e);
+                },
+                error:function (e) {
+                    toastr.error('Не удалось получить данные!', 'Оповещение!', {"progressBar": true});
+                }
+            });
+
+        }
+
+
+
     })
 
 

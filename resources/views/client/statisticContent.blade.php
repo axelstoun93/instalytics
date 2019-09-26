@@ -102,10 +102,9 @@
 
 
 
-        @if(!empty($statistic) and count($statistic) >= config('setting.client_stats_min_day'))
+        @if(!empty($statistic['data']) and count($statistic['data']) >= config('setting.client_stats_min_day'))
 
         <section id="line-area-charts" class="trend-client">
-
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -131,6 +130,137 @@
             </div>
         </section>
 
+
+            <section id="follow-unfollow-stats" class="trend-client-two">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Детальный график</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div id="area-chart-followers-stats" style="width:100%;height:380px;">
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="follow-unffolow">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Подписался - отписался</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse">
+                                @if(!empty($statistic['data']))
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <fieldset class="form-group" style="min-width:140px;float: right;padding:5px 20px;">
+                                                <select name="category" class="form-control" id="dataFollowUnfollowSelect" data-url="{{route('FollowUnfollowAccount',$client->id)}}" >
+                                                    <option value="">Дата:</option>
+                                                    @foreach(array_reverse($statistic['data']) as $k => $v)
+                                                        <option value="{{$v->date}}" {{($k === 0) ? 'selected':''}} >{{$v->date_rus}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                @endif
+                                    <div class="row" id="follow-unfollow-block">
+                                            <div class="col-sm-12 col-md-6">
+                                                <div class="card-body card-dashboard">
+                                                    <table class="table table-striped follow-table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>№</th>
+                                                            <th>Дата</th>
+                                                            <th>Аккаунт</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @if(!empty($follow) and count($follow) >= 1)
+                                                            @foreach($follow as $k => $v)
+                                                                <tr class="statistic-green-follow">
+                                                                    <td>{{$k+1}}</td>
+                                                                    <td>{{$v->date_rus}}</td>
+                                                                    <td><a href="https://instagram.com/{{$v->login}}" target="_blank"> <i class="fa fa-instagram" aria-hidden="true"></i> https://instagram.com/{{$v->login}}</a></td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
+                                                        </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            <th>№</th>
+                                                            <th>Дата</th>
+                                                            <th>Аккаунт</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-sm-12 col-md-6">
+                                                <div class="card-body card-dashboard">
+                                                    <table class="table unfollow-table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>№</th>
+                                                            <th>Дата</th>
+                                                            <th>Аккаунт</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @if(!empty($unfollow) and count($unfollow) >= 1)
+                                                            @foreach($unfollow as $k => $v)
+                                                                <tr class="statistic-red-follow">
+                                                                    <td>{{$k+1}}</td>
+                                                                    <td>{{$v->date_rus}}</td>
+                                                                    <td><a href="https://instagram.com/{{$v->login}}" target="_blank"> <i class="fa fa-instagram" aria-hidden="true"></i> https://instagram.com/{{$v->login}}</a></td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
+                                                        </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            <th>№</th>
+                                                            <th>Дата</th>
+                                                            <th>Аккаунт</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         <section id="configuration">
             <div class="row">
                 <div class="col-12">
@@ -149,7 +279,7 @@
                         </div>
                         <div class="card-content collapse show">
                             <div class="card-body card-dashboard">
-                                @if(!empty($statistic) and count($statistic) >= config('setting.client_stats_min_day'))
+                                @if(!empty($statistic['data']) and count($statistic['data']) >= config('setting.client_stats_min_day'))
                                     <table class="table table-striped base-configuration client-table-statistic">
                                         <thead>
                                         <tr>
@@ -159,9 +289,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                   @foreach($statistic as $v)
+                                        @foreach($statistic['data'] as $v)
                                             <tr class="{{(($v->growth >= 1)) ? 'statistic-green' : 'statistic-red'}}" >
-                                                <td>{{$v->date}}</td>
+                                                <td>{{$v->date_rus}}</td>
                                                 <td>{{$v->growth}}</td>
                                                 <td>{{$v->follower}}</td>
                                             </tr>
@@ -201,35 +331,9 @@
 
         <section id="basic-examples">
             <div class="row match-height">
-                {{--<div class="col-xl-6 col-md-6 col-sm-12">
-                    <div class="card">
-                        <div class="card-content">
-                            <img class="card-img-top img-fluid" src="admin/images/button.jpg" alt="Card image cap">
-                            <div class="card-body">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">Icing powder caramels macaroon. Toffee sugar plum brownie pastry gummies jelly.</p>
-                                <a href="#" class="btn btn-outline-teal">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-xl-6 col-md-6 col-sm-12">
                     <div class="card">
-                        <div class="card-content">
-                            <img class="card-img-top img-fluid" src="admin/images/button_two.jpg" alt="Card image cap">
-                            <div class="card-body">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">Icing powder caramels macaroon. Toffee sugar plum brownie pastry gummies jelly.</p>
-                                <a href="#" class="btn btn-outline-teal">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>--}}
-
-
-                <div class="col-xl-6 col-md-6 col-sm-12">
-                    <div class="card">
-                        <a href="https://www.mbazarov.ru/instagramconsulting" target="_blank">
+                        <a href="http://smm-mbazarov.ru/consultations" target="_blank">
                             <div class="card-content">
                                 <div class="card-body text-center">
                                     <img class="card-img img-fluid mb-1" src="admin/images/button.jpg" alt="Card image cap">
@@ -282,6 +386,9 @@
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/client/statistic.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/client/client.js"></script>
 
+<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/amcharts.js" type="text/javascript"></script>
+<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/serial.js" type="text/javascript"></script>
+<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/themes/light.js" type="text/javascript"></script>
 
 <!-- 2. Include library -->
 
@@ -322,8 +429,8 @@
                     xAxis: {
                         type: 'category',
                         data: [
-                            @foreach($statistic as $v)
-                                '{{$v->date}}',
+                            @foreach($statistic['data'] as $v)
+                                '{{$v->date_rus}}',
                             @endforeach
                         ],
                     },
@@ -338,7 +445,7 @@
 
                     series: [{
                         data: [
-                            @foreach($statistic as $v)
+                            @foreach($statistic['data'] as $v)
                                 '{{$v->follower}}',
                             @endforeach
                         ],
@@ -438,8 +545,95 @@
             }
         });
 
+        var data_r = {!! $statistic['json_data_follow_unfollow']['detail_data'] !!};
+
+        var title =  {!! $statistic['json_data_follow_unfollow']['detail_title'] !!};
+
+        if (data_r && data_r.length) {
+            var graphsFollowers = [];
+            for (var i = 0; i < data_r.length; i++) {
+                data_r[i].unfollow_day = -1 * data_r[i].unfollow_day;
+            }
+
+            for (var key in title) {
+                var fillColors = '#ff200d';
+                if (key === 'follow_day') {
+                    fillColors = '#00B5B8';
+                }
+
+                graphsFollowers.push({
+                    "balloonText": "<b>[[title]]</b>: <span style='font-size:14px'><b>[[value]]</b></span>",
+                    "fillAlphas": 0.9,
+                    "lineAlpha": 0.8,
+                    "title": title[key].title,
+                    "color": "#000000",
+                    'fillColors': fillColors,
+                    'lineColors': '#000000',
+                    "valueField": key,
+                    "type": "column",
+                });
+            }
+
+
+
+            var chartFollowersHistogram = AmCharts.makeChart('area-chart-followers-stats', {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "align": "center",
+                    "equalWidths": true,
+                    "periodValueText": "[[value]]",
+                    "valueAlign": "center",
+                    "valueText": "[[value]]",
+                    "valueWidth": 100,
+                    "useGraphSettings": true,
+                },
+                "chartScrollbar": {
+                    "scrollbarHeight": 20,
+                    "backgroundAlpha": 0,
+                    "selectedBackgroundAlpha": 0.1,
+                    "selectedBackgroundColor": "#888888",
+                    "graphFillAlpha": 0,
+                    "graphLineAlpha": 0.5,
+                    "selectedGraphFillAlpha": 0,
+                    "selectedGraphLineAlpha": 1,
+                    "autoGridCount": false,
+                    "color": "#AAAAAA",
+                    "resizeEnabled": false,
+                },
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "dataProvider": data_r,
+                "valueAxes": [{
+                    "stackType": "regular" ,
+                    "gridAlpha": 0.07,
+                    "position": "left",
+                    "integersOnly": true,
+                }],
+                "graphs": graphsFollowers,
+                "plotAreaBorderAlpha": 0,
+                "categoryField": "date",
+                "categoryAxis": {
+                    "startOnAxis": true,
+                    "axisColor": "#DADADA",
+                    "gridAlpha": 0.07,
+                    "autoWrap": true,
+                    "centerLabels": true,
+                    "parseDates": true,
+                    "dataDateFormat": "YYYY-MM-DD",
+                },
+                "export": {
+                    "enabled": true
+                },
+            });
+        }
+
+
     })(window, document, jQuery);
 </script>
+
 
 
 

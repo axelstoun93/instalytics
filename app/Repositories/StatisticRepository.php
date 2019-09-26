@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\InstagramModelAccount;
-use App\Proxy;
 use App\Statistic;
 Use App\Repositories\Assistant\DataAssistant;
 Use Illuminate\Support\Facades\DB;
@@ -45,10 +44,44 @@ class StatisticRepository extends Repository
    //Выводим информацию о приростах в ввиде таблицы
    function getTableClient($id){
 
-       //Получаем 40 дней назад
-       $oldDay =  \Carbon\Carbon::today()->subDays(40)->format('Y-m-d');
+       //Получаем 30 дней назад
+       $oldDay =  \Carbon\Carbon::today()->subDays(30)->format('Y-m-d');
 
        $res = $this->model->where('instagram_id',$id)->where('date','>=',$oldDay)->get();
+
+       $ready = [];
+
+       $lastFollower = '';
+
+       foreach ($res as $key => $v){
+
+           if($key === 0){
+               $lastFollower = $v->follower;
+               continue;
+           }
+
+           $growth = $v->follower - $lastFollower;
+           $v->growth = ($growth >= 1) ? '+'.$growth : $growth;
+
+           $v->date_rus = DataAssistant::DayAndMountFormatFull($v->date);
+
+           $ready['data'][] = $v;
+           $ready['data_json'][] = json_encode($v);
+
+           $lastFollower = $v->follower;
+       }
+
+       if(!empty($ready['data'])){
+           $ready['json_data_follow_unfollow']['detail_data'] = json_encode($ready['data']);
+           $ready['json_data_follow_unfollow']['detail_title'] = json_encode(['follow_day'=> ['title'=> 'Подписалось'],'unfollow_day' => ['title' => 'Отписалось']]);
+       }
+
+       return $ready;
+
+
+
+       //Выводим красивый график клиентов и склеиваем данные
+       /*$res = $this->model->where('instagram_id',$id)->where('date','>=',$oldDay)->get();
 
        $ready = [];
 
@@ -96,42 +129,8 @@ class StatisticRepository extends Repository
 
        }
 
-       return $ready;
+       return $ready;*/
    }
-
-
-    function getTable($id){
-
-        //Получаем 40 дней назад
-        $oldDay =  \Carbon\Carbon::today()->subDays(40)->format('Y-m-d');
-
-        $res = $this->model->where('instagram_id',$id)->where('date','>=',$oldDay)->get();
-
-        $ready = [];
-
-        $lastFollower = '';
-
-
-
-        foreach ($res as $key => $v){
-
-            if($key === 0){
-                $lastFollower = $v->follower;
-                continue;
-            }
-
-            $growth = $v->follower - $lastFollower;
-            $v->growth = ($growth >= 1) ? '+'.$growth : $growth;
-
-            $v->date = DataAssistant::DayAndMountFormatFull($v->date);
-            $ready[] = $v;
-
-            $lastFollower = $v->follower;
-
-        }
-        return $ready;
-    }
-
 
 
     //Получаем аккаунты с маленьким приростом или с больщим количеством подписчиков
@@ -199,7 +198,7 @@ class StatisticRepository extends Repository
             }
 
         }
-        
+
 
         return $readyNotificationAccount;
 
@@ -261,6 +260,29 @@ class StatisticRepository extends Repository
 
 
 
+
+    }
+
+
+    function updateFollowUnFollow($instagramID,$follow,$unfollow,$nowFollower = false){
+
+        $backDay = DataAssistant::backDay();
+
+        if($nowFollower){
+            $array = ['follow_day' => $follow,'unfollow_day' => $unfollow,'follower' => $nowFollower];
+        }else{
+            $array = ['follow_day' => $follow,'unfollow_day' => $unfollow];
+        }
+
+        $item = $this->model->where('instagram_id','=',$instagramID)->where('date','=',$backDay)->first();
+
+        if(empty($item)){
+            return false;
+        }
+
+        $result = $item->update($array);
+
+        return $result;
 
     }
 

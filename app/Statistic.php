@@ -11,7 +11,7 @@ class Statistic extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id','instagram_id','follower','following','media_count','date'
+        'id','instagram_id','follower','following','follow_day','unfollow_day','media_count','date'
     ];
 
 }

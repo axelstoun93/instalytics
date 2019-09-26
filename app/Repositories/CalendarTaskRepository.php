@@ -22,7 +22,7 @@ class CalendarTaskRepository extends Repository
 
     //Получаем часть аккаунтов по которым будем получать данные
     function getOnePart(){
-        $res = $this->model->select('id','instagram_id','login')->take(30)->get();
+        $res = $this->model->select('id','instagram_id','login')->take(50)->get();
         return $res;
     }
 
@@ -33,6 +33,13 @@ class CalendarTaskRepository extends Repository
             return true;
         }
         return false;
+    }
+
+
+    //Удаляем все записи
+    function deleteAllAccount(){
+        $res = $this->model::query()->delete();
+        return $res;
     }
 
 }

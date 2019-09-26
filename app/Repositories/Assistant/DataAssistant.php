@@ -20,9 +20,24 @@ class DataAssistant
     }
 
 
+    // -1 день
     static function backDay(){
         $date = new \DateTime();
         $date->modify('-1 day');
+        return $date->format('Y-m-d');
+    }
+
+    // -2 дня
+    static function oldBackDay(){
+        $date = new \DateTime();
+        $date->modify('-2 day');
+        return $date->format('Y-m-d');
+    }
+
+    // -3 дня
+    static function backThreeDay(){
+        $date = new \DateTime();
+        $date->modify('-3 day');
         return $date->format('Y-m-d');
     }
 
