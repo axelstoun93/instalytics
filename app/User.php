@@ -34,7 +34,7 @@ class User extends Authenticatable
 
     public function account()
     {
-        return $this->hasOne('App\InstagramModelAccount','user_id');
+        return $this->hasOne('App\InstagramAccount','user_id');
     }
 
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InstagramModelAccount extends Model
+class InstagramAccount extends Model
 {
     protected $table = 'instagram_account';
 

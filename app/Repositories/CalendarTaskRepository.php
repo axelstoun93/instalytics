@@ -37,9 +37,24 @@ class CalendarTaskRepository extends Repository
 
 
     //Удаляем все записи
-    function deleteAllAccount(){
-        $res = $this->model::query()->delete();
+    function deleteTaskByInstagramId($id){
+        $res = $this->model->where('instagram_id','=',$id)->delete();
         return $res;
+    }
+
+    //Удаляем все записи
+    function deleteAllAccount(){
+        $res = $this->model->truncate();
+        return $res;
+    }
+
+
+    function isEmpty(){
+        $res =  $this->model->first();
+        if($res){
+            return false;
+        }
+        return true;
     }
 
 }

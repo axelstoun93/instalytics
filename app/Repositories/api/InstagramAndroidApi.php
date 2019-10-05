@@ -16,10 +16,13 @@ class InstagramAndroidApi
     private $rankToken;
 
     public static function getInstance($donor){
+
         if (self::$_instance == null) {
             self::$_instance = new InstagramAndroidApi();
             self::$_instance->connect($donor);
         }
+
+        self::$_instance->connect($donor);
         return self::$_instance;
     }
 
@@ -71,7 +74,13 @@ class InstagramAndroidApi
         return $followers;
     }
 
-    public function getNowFollowers($id){
+    public function getInfoUserById($id){
+        $account = $this->android->people->getInfoById($id)->getUser();
+        return $account;
+    }
+
+    //Получаем число подписчиков на данный момент
+    public function getCountFollowers($id){
       $res =  $this->android->people->getInfoById($id)->getUser()->getFollowerCount();
       return $res;
     }

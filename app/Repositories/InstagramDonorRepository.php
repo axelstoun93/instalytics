@@ -2,7 +2,6 @@
 namespace App\Repositories;
 
 use App\InstagramDonor;
-use App\Repositories\Api\InstagramAndroidApi;
 
 class InstagramDonorRepository extends Repository
 {
@@ -42,8 +41,8 @@ class InstagramDonorRepository extends Repository
     }
 
     //Получаем инстаграм аккаунты которые будут парсить данные
-    public function getValidateDonor(){
-        $res = $this->model->where('status', 1)->take(3)->get();
+    public function getValidateDonor($countMin){
+        $res = $this->model->where('status', 1)->take($countMin)->get();
 
         if(empty($res)){
             return false;
@@ -52,6 +51,21 @@ class InstagramDonorRepository extends Repository
         $res->load('proxy');
         return $res;
     }
+
+    //Получаем 1 валидный инстаграм аккаунт который будет парсить данные
+    public function getFirstValidateDonor(){
+
+        $res = $this->model->where('status', 1)->first();
+
+        if(empty($res)){
+            return false;
+        }
+
+        $res->load('proxy');
+        return $res;
+
+    }
+
 
     function updateStatus($id,$status){
         $array = ['status' => $status];

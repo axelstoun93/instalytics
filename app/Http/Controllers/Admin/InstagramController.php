@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\InstagramModelAccount;
+use App\InstagramAccount as InstagramModelAccount;
 use App\Repositories\FollowListRepository;
 use App\Repositories\UnFollowListRepository;
 use App\UnFollowList;

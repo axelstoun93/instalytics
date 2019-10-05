@@ -36,15 +36,22 @@ class CalendarAndroidTaskRepository extends Repository
 
     //Удаляем первый аккаунт из списка, например если не существует аккаунт
     function deleteFirstAccount(){
-       $first =  $this->model->first();
-       $result = $first->delete();
+        $result =  $this->model->first()->delete();
        return $result;
     }
 
     //Удаляем все записи
     function deleteAllAccount(){
-        $res = $this->model::query()->delete();
+        $res = $this->model->truncate();
         return $res;
+    }
+
+    function isEmpty(){
+        $res =  $this->model->first();
+        if($res){
+            return false;
+        }
+        return true;
     }
 
 }

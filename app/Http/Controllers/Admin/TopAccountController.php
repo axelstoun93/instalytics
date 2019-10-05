@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Statistic;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Repositories\AdminMenuRepository;
 use App\AdminMenu;
 use App\Repositories\StatisticRepository;

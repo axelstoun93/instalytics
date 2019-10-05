@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Repositories;
+
 use App\Repositories\Api\InstagramAccount;
 use App\User;
-use App\InstagramModelAccount;
+use App\InstagramAccount as InstagramModelAccount;
 use Image;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Assistant\DataAssistant;

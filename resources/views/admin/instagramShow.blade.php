@@ -123,6 +123,26 @@
         @endif
 
 
+            <div class="col-md-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <div class="panel-actions">
+                            <a href="#" class="fa fa-caret-down"></a>
+                            <a href="#" class="fa fa-times"></a>
+                        </div>
+
+                        <h2 class="panel-title">Pie Chart</h2>
+                        <p class="panel-subtitle">Default Pie Chart</p>
+                    </header>
+                    <div class="panel-body">
+                        <!-- Flot: Pie -->
+                        <div id="chartdiv"></div>
+                    </div>
+                </section>
+            </div>
+
+
+
         @if(!empty($statistic['data']))
 
                 <section id="configuration">
@@ -379,12 +399,11 @@
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/instagram.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/amcharts.js" type="text/javascript"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/serial.js" type="text/javascript"></script>
+<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/pue" type="text/javascript"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/themes/light.js" type="text/javascript"></script>
-
-
 <!-- 2. Include library -->
 
-<script >
+<script>
     $(window).ready(function(){
 
         // Set paths
@@ -628,6 +647,74 @@
 
 
     });
+
+
+
+    AmCharts.addInitHandler(function(chart) {
+        if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
+            return;
+
+        // init fields
+        var titleField = chart.titleField;
+        var legendTitleField = chart.titleField+"Legend";
+
+        // iterate through the data and create truncated label properties
+        for(var i = 0; i < chart.dataProvider.length; i++) {
+            var label = chart.dataProvider[i][chart.titleField];
+            if (label.length > chart.legend.truncateLabels)
+                label = label.substr(0, chart.legend.truncateLabels-1)+'...'
+            chart.dataProvider[i][legendTitleField] = label;
+        }
+
+        // replace chart.titleField to show our own truncated field
+        chart.titleField = legendTitleField;
+
+        // make the balloonText use full title instead
+        chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
+
+    }, ["pie"]);
+
+    /**
+     * Create the chart
+     */
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "pie",
+        "theme": "light",
+        "labelsEnabled": false,
+        "legend": {
+            "markerType": "circle",
+            "position": "right",
+            "marginRight": 80,
+            "autoMargins": false,
+            "truncateLabels": 25 // custom parameter
+        },
+        "dataProvider": [{
+            "country": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non.",
+            "litres": 256.9
+        }, {
+            "country": "Etiam vel convallis ipsum, vel egestas ligula. Cras sed magna.",
+            "litres": 131.1
+        }, {
+            "country": "Nulla nec tristique dolor. Mauris gravida est non tempus elementum.",
+            "litres": 115.8
+        }, {
+            "country": "Vivamus commodo porta risus, eu sollicitudin eros pretium nec. Aenean.",
+            "litres": 109.9
+        }, {
+            "country": "Sed efficitur quis orci a elementum. Sed turpis ligula, commodo.",
+            "litres": 108.3
+        }, {
+            "country": "Sed convallis congue nisi et ullamcorper. Mauris eleifend eu est.",
+            "litres": 65
+        }, {
+            "country": "Pellentesque leo sapien, ornare sed ligula id, hendrerit sollicitudin elit.",
+            "litres": 40
+        }],
+        "valueField": "litres",
+        "titleField": "country",
+        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>"
+    });
+
 </script>
 
 

@@ -83,6 +83,7 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
     ]);
 
     Route::post('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.validate');
+
     //Route::get('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.getValidate');
 
     Route::resource('/instagram','Admin\InstagramController',[
@@ -137,8 +138,13 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
 
 /*Route::get('/init','CronController@init');
 Route::get('/getTask','CronController@getTask');
-Route::get('/getAndroidTask','CronController@getAndroidTask');*/
-Route::get('/deleteTest','CronController@clearFollowerUserList');
+Route::get('/getAndroidTask','CronController@getAndroidTask');
+Route::get('/deleteTest','CronController@clearFollowerUserList');*/
+
+Route::get('/getTask','CronController@getTaskNew');
+
+//Route::get('/botInit','AccountCronController@init');
+//Route::get('/checkBotsAccount','AccountCronController@checkAccountFollowers');
 
 /* Клиент */
 Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function ()

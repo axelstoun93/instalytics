@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\InstagramModelAccount;
+use App\InstagramAccount as InstagramModelAccount;
 use App\Statistic;
 Use App\Repositories\Assistant\DataAssistant;
 Use Illuminate\Support\Facades\DB;

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\InstagramModelAccount;
+use App\InstagramAccount as InstagramModelAccount;
 use App\Repositories\Api\InstagramAccount;
 
 class InstagramAccountRepository extends Repository

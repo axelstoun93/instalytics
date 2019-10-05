@@ -28,14 +28,20 @@ class Kernel extends ConsoleKernel
         $schedule->call('App\Http\Controllers\CronController@init')->dailyAt('0:01');
 
         //Получаем данные
-        $schedule->call('App\Http\Controllers\CronController@getTask')->everyFiveMinutes();
+        $schedule->call('App\Http\Controllers\CronController@getTaskNew')->everyTenMinutes();
 
         //Получаем данные по ANDROID API - каждые 3 минуты
         $schedule->call('App\Http\Controllers\CronController@getAndroidTask')->cron("*/3 * * * *");
 
-        //Чистим таблицу follower_user_list
+        //Чистим таблицу каждые 3 часа follower_user_list
         $schedule->call('App\Http\Controllers\CronController@clearFollowerUserList')->cron("0 */3 * * *");
 
+        //Проверки на ботов
+        //Проверяем очередь аккаунтов каждые 2 часа
+        $schedule->call('App\Http\Controllers\AccountCronController@init')->cron("0 */2 * * *");
+
+        //Делаем анализ аудитории по 500 штук пока не проверим всю аудиторию и не запишем данные в проверяемый аккаунт, каждые 8 минут
+        $schedule->call('App\Http\Controllers\AccountCronController@checkAccountFollowers')->cron("*/8 * * * *");
     }
 
     /**
