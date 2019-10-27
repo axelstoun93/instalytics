@@ -51,10 +51,11 @@ class CronController extends Controller
     //Инициализация записываем аккаунты по которым планируем получить данные
     public function init(){
 
-        $allAccount = $this->i_rep->getCurrentAccount();
+        $allAccount = $this->i_rep->getCurrentAccountCron();
 
-        //Получаем аккаунты у которых подписок <= 30000
-        $limitAccount = $this->i_rep->getCurrentAccountLimitFollower(30000);
+        //Получаем аккаунты у которых подписок <= 100000
+        $limitAccount = $this->i_rep->getCurrentAccountLimitFollowerCron(100000);
+
 
         $readyAllArray = [];
 
@@ -117,7 +118,7 @@ class CronController extends Controller
 
         //Если список пуст нечего не делаем
         if($this->task_rep->isEmpty()){
-            return false;
+           exit();
         }
 
         //Получаем аккаунты который будет парсить данные в данном случае получаем 3 аккаунта за 1 раз
@@ -144,7 +145,7 @@ class CronController extends Controller
 
                     $readyArray = [];
 
-                    $androidAPI = InstagramAndroidApi::getInstance($donor);
+                    $androidAPI = new InstagramAndroidApi($donor);
 
                     $instagramId = '';
                     $instagramLogin = '';
@@ -193,11 +194,22 @@ class CronController extends Controller
                            $this->arrayUpdateStatus[$instagramId]['status'] = 0;
                            $this->arrayUpdateStatus[$instagramId]['instagram_id'] = $instagramId;
                            $this->i_rep->updateStatus($this->arrayUpdateStatus);
+
                            //Записываем данные по аккаунтам которые уже получили статистику
                            $this->s_rep->insert($readyArray);
                            // если получили ошибку по аккаунту удаляем его из списка что бы больше его не дергать
                            $taskRepositoryList = $this->task_rep->deleteTaskByInstagramId($instagramId);
-                        }
+                        }elseif($e->getMessage() === 'No response from server. Either a connection or configuration error.'){
+                           //Обновляем статус у инстаграм аккаунта он больше не аквтиен
+                           $this->arrayUpdateStatus[$instagramId]['status'] = 0;
+                           $this->arrayUpdateStatus[$instagramId]['instagram_id'] = $instagramId;
+                           $this->i_rep->updateStatus($this->arrayUpdateStatus);
+
+                           //Записываем данные по аккаунтам которые уже получили статистику
+                           $this->s_rep->insert($readyArray);
+                           // если получили ошибку по аккаунту удаляем его из списка что бы больше его не дергать
+                           $taskRepositoryList = $this->task_rep->deleteTaskByInstagramId($instagramId);
+                       }
                        echo $e->getMessage();
         }
 
@@ -209,7 +221,7 @@ class CronController extends Controller
 
         //Если список пуст нечего не делаем
         if($this->task_android_rep->isEmpty()){
-            return false;
+            exit();
         }
 
         $backDay =  DataAssistant::backDay();
@@ -220,37 +232,47 @@ class CronController extends Controller
         //если не закончили ждем пока закончит
         if(!$allAccount){
             //echo  'Скрипт небыл запущен';
-            die;
+            exit();
         }
 
 
         //Получаем аккаунты который будет парсить данные в данном случае получаем 3 аккаунта за 1 раз
         $allValidateDonor = $this->donor_rep->getValidateDonor(3);
+        //Получаем аккаунты по которым собираем данные
+        $allAndroidAccount = $this->task_android_rep->getOnePart();
+        $deleteIdAccountList = [];
+
         try{
-        foreach ($allValidateDonor as $donor){
+            foreach ($allValidateDonor as $k => $donor){
 
-            //Получаем аккаунт по которому будем получть данные
-            $allAndroidAccount = $this->task_android_rep->getOnePart();
-
-        if(!empty($allAndroidAccount) and count($allAndroidAccount) >= 1){
-
-                if(empty($donor)){
+                //если аккаунт не получили отваливаемся
+                if(empty($allAndroidAccount[$k])){
                     break;
                 }
 
-                $readyArray = [];
+                //Получаем аккаунт по которому будем получть данные
+                $androidAccount = $allAndroidAccount[$k];
 
-                $androidAPI = InstagramAndroidApi::getInstance($donor);
+                if(!empty($androidAccount)){
 
-                $status = true;
+                    if(empty($donor)){
+                        break;
+                    }
 
-                foreach ($allAndroidAccount as $v){
+                    $readyArray = [];
 
-                    $instagramId = $v->instagram_id;
-                    $instagramLogin = $v->login;
+                    $androidAPI = new InstagramAndroidApi($donor);
+
+                    $status = true;
+
+                    $instagramId = $androidAccount->instagram_id;
+                    $instagramLogin = $androidAccount->login;
+                    $androidListId = $androidAccount->id;
+                    $nextMaxIdDb = $androidAccount->next_max_id;
+                    $rankTokenDb = $androidAccount->rank_token;
 
 
-                    $followers = $androidAPI->getFollowers($instagramId);
+                    $followers = $androidAPI->getPageFollowers($instagramId,$nextMaxIdDb,$rankTokenDb);
 
                     foreach ($followers as $key => $item){
                         $readyArray[$key]['login'] = $item->getUsername();
@@ -261,25 +283,131 @@ class CronController extends Controller
                         $readyArray[$key]['date'] = $backDay;
                     }
 
+                    $nextMaxId = $androidAPI->getNexMaxId();
+                    $rankToken = $androidAPI->getRankToken();
+
+
+                    if($nextMaxId){
+                        $this->task_android_rep->update($androidListId,['rank_token' => $rankToken,'next_max_id' => $nextMaxId]);
+                    }else{
+                        $this->task_android_rep->update($androidListId,['next_max_id' => 0,'rank_token' => 0]);
+                        $nowFollower = $androidAPI->getCountFollowers($instagramId);
+                        $this->follower_list_rep->getDataFollowUnFollow($instagramId,$nowFollower);
+                        $deleteIdAccountList[] = $androidListId;
+                    }
+
                     $status = $this->follower_list_rep->insert($readyArray);
+                    $this->deletePartAndroidTask($deleteIdAccountList);
 
-                    $nowFollower = $androidAPI->getCountFollowers($instagramId);
-
-                    $this->follower_list_rep->getDataFollowUnFollow($v->instagram_id,$nowFollower);
-
-                }
-
-                $this->deletePartAndroidTask($allAndroidAccount);
-
-            } else{
-                //echo  'Пусто!';
-                break;
-        }}}catch (\Exception $e){
+                } else{
+                    //echo  'Пусто!';
+                    break;
+                }}}catch (\Exception $e){
             if($e->getMessage() === 'Requested resource does not exist.'){
+                $res = $this->task_android_rep ->deleteFirstAccount();
+            }elseif($e->getMessage() === 'No response from server. Either a connection or configuration error.'){
                 $res = $this->task_android_rep ->deleteFirstAccount();
             }
             echo $e->getMessage();
         }
+
+    }
+
+    public function getAndroidTaskTest(){
+
+        //Если список пуст нечего не делаем
+        if($this->task_android_rep->isEmpty()){
+            exit();
+        }
+
+        $backDay =  DataAssistant::backDay();
+
+        //Проверяем парсинг данных закончен или нет
+        $allAccount = $this->task_rep->isEmpty();
+
+        //если не закончили ждем пока закончит
+        if(!$allAccount){
+            //echo  'Скрипт небыл запущен';
+            exit();
+        }
+
+
+        //Получаем аккаунты который будет парсить данные в данном случае получаем 3 аккаунта за 1 раз
+        $allValidateDonor = $this->donor_rep->getValidateDonor(3);
+        //Получаем аккаунты по которым собираем данные
+        $allAndroidAccount = $this->task_android_rep->getOnePart();
+        $deleteIdAccountList = [];
+
+        try{
+            foreach ($allValidateDonor as $k => $donor){
+
+                //если аккаунт не получили отваливаемся
+                if(empty($allAndroidAccount[$k])){
+                    break;
+                }
+
+                //Получаем аккаунт по которому будем получть данные
+                $androidAccount = $allAndroidAccount[$k];
+
+                if(!empty($androidAccount)){
+
+                    if(empty($donor)){
+                        break;
+                    }
+
+                    $readyArray = [];
+
+                    $androidAPI = new InstagramAndroidApi($donor);
+
+                    $status = true;
+
+                    $instagramId = $androidAccount->instagram_id;
+                    $instagramLogin = $androidAccount->login;
+                    $androidListId = $androidAccount->id;
+                    $nextMaxIdDb = $androidAccount->next_max_id;
+                    $rankTokenDb = $androidAccount->rank_token;
+
+
+                    $followers = $androidAPI->getPageFollowers($instagramId,$nextMaxIdDb,$rankTokenDb);
+
+                    foreach ($followers as $key => $item){
+                            $readyArray[$key]['login'] = $item->getUsername();
+                            $readyArray[$key]['instagram_id'] = $instagramId;
+                            $readyArray[$key]['follower_instagram_id'] = $item->getPk();
+                            $readyArray[$key]['follower'] = null;
+                            $readyArray[$key]['following'] = null;
+                            $readyArray[$key]['date'] = $backDay;
+                    }
+
+                    $nextMaxId = $androidAPI->getNexMaxId();
+                    $rankToken = $androidAPI->getRankToken();
+
+
+                   if($nextMaxId){
+                            $this->task_android_rep->update($androidListId,['rank_token' => $rankToken,'next_max_id' => $nextMaxId]);
+                   }else{
+                           $this->task_android_rep->update($androidListId,['next_max_id' => 0,'rank_token' => 0]);
+                           $nowFollower = $androidAPI->getCountFollowers($instagramId);
+                           $this->follower_list_rep->getDataFollowUnFollow($instagramId,$nowFollower);
+                           $deleteIdAccountList[] = $androidListId;
+                        }
+
+                        $status = $this->follower_list_rep->insert($readyArray);
+                        $this->deletePartAndroidTask($deleteIdAccountList);
+
+                } else{
+                    //echo  'Пусто!';
+                    break;
+                }}}catch (\Exception $e){
+                    if($e->getMessage() === 'Requested resource does not exist.'){
+                        $res = $this->task_android_rep ->deleteFirstAccount();
+                    }elseif($e->getMessage() === 'No response from server. Either a connection or configuration error.'){
+                        $res = $this->task_android_rep ->deleteFirstAccount();
+                    }
+                    echo $e->getMessage();
+        }
+
+
     }
 
     //Удаляем первые записи задачи
@@ -298,7 +426,7 @@ class CronController extends Controller
     protected function deletePartAndroidTask($allAccount){
         $delete = [];
         foreach ($allAccount as $k => $v){
-            $delete[$k]['id'] = $v->id;
+            $delete[$k]['id'] = $v;
         }
         $res = $this->task_android_rep->deleteOnePart($delete);
         if($res){

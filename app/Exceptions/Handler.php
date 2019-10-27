@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+Use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -13,9 +15,18 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        /* */
+        SuspiciousOperationException::class,
     ];
 
+    protected function prepareException(Exception $e)
+    {
+        if ($e instanceof SuspiciousOperationException) {
+            $e = new NotFoundHttpException(null, $e);
+        }
+
+        return parent::prepareException($e);
+    }
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
@@ -48,4 +59,7 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
+
 }
+
+

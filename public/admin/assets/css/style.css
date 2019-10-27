@@ -186,3 +186,22 @@ td.color-red{
     margin: auto;
 }
 
+.brand-text{
+    font-size: 1.60rem;
+}
+
+.left-menu-switch i {
+    margin-right: 0 !important;
+}
+
+@media(max-width: 480px){
+.register .col-10,
+.login .col-10{
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 98.333%;
+    -moz-box-flex: 0;
+    -ms-flex: 0 0 98.333%;
+    flex: 0 0 98.333%;
+    max-width: 100% !important;
+}
+}

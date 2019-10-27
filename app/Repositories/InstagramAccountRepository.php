@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\InstagramAccount as InstagramModelAccount;
 use App\Repositories\Api\InstagramAccount;
+use App\Repositories\Assistant\DataAssistant;
 
 class InstagramAccountRepository extends Repository
 {
@@ -12,7 +13,37 @@ class InstagramAccountRepository extends Repository
         $this->model = $instagramAccount;
     }
 
+    function all(){
+        $result =  $this->model->all();
+        $result->load('user');
+        return $result;
+    }
+
     function addInstagramAccount(InstagramAccount $instagramAccount,$category,$user_id,$bots){
+
+        $account = $this->model->create([
+            'user_id' => $user_id,
+            'instagram_id' => $instagramAccount->id,
+            'avatar' => $instagramAccount->avatar,
+            'name' => $instagramAccount->name,
+            'login' => $instagramAccount->login,
+            'follower' => $instagramAccount->follower,
+            'following' => $instagramAccount->following,
+            'media_count' => $instagramAccount->countMedia,
+            'category_id' => $category,
+            'promotion' => 1,
+            'bots' => $bots
+        ]);
+
+        if($account){
+            return true;
+        }
+
+        return false;
+    }
+
+    //Функция используется при регистрации
+    function registerInstagramAccount(InstagramAccount $instagramAccount,$category,$user_id,$bots){
 
         $account = $this->model->create([
             'user_id' => $user_id,
@@ -60,17 +91,32 @@ class InstagramAccountRepository extends Repository
         return $res;
     }
 
+    //Получаем только актуальные аккаунты и уникальные id для для парсинга
+    function getCurrentAccountCron(){
+        $nowDate = DataAssistant::nowDay();
+        $res = $this->model->select('instagram_id','login')->whereHas('user', function ($query) {
+            $nowDate = DataAssistant::nowDay();
+            $query->where('pay_day','>=',$nowDate);
+        })->where('promotion','=',1)->groupBy('instagram_id','login')->get();
+        $res->load('user');
+        return $res;
+    }
 
-    //Получаем актуальные аккаунты у которых подписчиков <= 10000
-    function getCurrentAccountLimitFollower($init){
-        $res = $this->model->where('promotion','=',1)->where('follower','<=',$init)->get();
+
+    //Получаем актуальные аккаунты у которых подписчиков <= 60000
+    function getCurrentAccountLimitFollowerCron($init){
+        $nowDate = DataAssistant::nowDay();
+        $res = $this->model->select('instagram_id','login')->whereHas('user', function ($query) {
+            $nowDate = DataAssistant::nowDay();
+            $query->where('pay_day','>=',$nowDate);
+        })->where('promotion','=',1)->where('follower','<=',$init)->groupBy('instagram_id','login')->get();
         $res->load('user');
         return $res;
     }
 
 
     //Получаем только актуальные аккаунты и категорию тех к кому относяться
-    function getCurrentAccountandCategory($category){
+    function getCurrentAccountAndCategory($category){
         $res = $this->model->where('promotion','=',1)->where('category_id','=',$category)->get();
         $res->load('user');
         return $res;

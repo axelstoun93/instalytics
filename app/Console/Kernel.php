@@ -27,21 +27,21 @@ class Kernel extends ConsoleKernel
 
         $schedule->call('App\Http\Controllers\CronController@init')->dailyAt('0:01');
 
-        //Получаем данные
-        $schedule->call('App\Http\Controllers\CronController@getTaskNew')->everyTenMinutes();
+        //Получаем данные каждые 5 минут
+        $schedule->call('App\Http\Controllers\CronController@getTaskNew')->everyFiveMinutes();
 
-        //Получаем данные по ANDROID API - каждые 3 минуты
-        $schedule->call('App\Http\Controllers\CronController@getAndroidTask')->cron("*/3 * * * *");
+        //Получаем данные по ANDROID API - каждые 5 минуты
+        $schedule->call('App\Http\Controllers\CronController@getAndroidTask')->everyFiveMinutes();
 
         //Чистим таблицу каждые 3 часа follower_user_list
         $schedule->call('App\Http\Controllers\CronController@clearFollowerUserList')->cron("0 */3 * * *");
 
         //Проверки на ботов
-        //Проверяем очередь аккаунтов каждые 2 часа
-        $schedule->call('App\Http\Controllers\AccountCronController@init')->cron("0 */2 * * *");
+        //Проверяем очередь аккаунтов каждые 15 минут
+        $schedule->call('App\Http\Controllers\AccountCronController@init')->cron("*/15 * * * *");
 
-        //Делаем анализ аудитории по 500 штук пока не проверим всю аудиторию и не запишем данные в проверяемый аккаунт, каждые 8 минут
-        $schedule->call('App\Http\Controllers\AccountCronController@checkAccountFollowers')->cron("*/8 * * * *");
+        //Делаем анализ аудитории по 500 штук пока не проверим всю аудиторию и не запишем данные в проверяемый аккаунт, каждые 10 минут
+        $schedule->call('App\Http\Controllers\AccountCronController@checkAccountFollowers')->cron("*/7 * * * *");
     }
 
     /**

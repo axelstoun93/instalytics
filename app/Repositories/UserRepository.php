@@ -109,6 +109,62 @@ class UserRepository extends Repository
 
     }
 
+    //Регистрация клиента
+    function registerClient($request){
+
+        $instagram = new InstagramAccount();
+
+        $instagramRepository = new InstagramAccountRepository(new InstagramModelAccount());
+
+        if($instagram->getAccountLogin($request->instagram_login)){
+
+            $img = Image::make($instagram->avatar)->resize(360, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+
+
+            $nameImages = uniqid();
+            $path = config('setting.theme-admin')."/images/avatar";
+            $fullPatch = $path."/".$nameImages.'.jpg';
+            $img->save($fullPatch);
+            $instagram->avatar = $fullPatch;
+
+
+
+            $client = $this->model->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make(trim($request->password)),
+                'phone' => $request->phone,
+                'pay_day' => $request->pay_day,
+            ]);
+
+            if($client) {
+
+                $client->role()->attach(2);
+                $res = $instagramRepository->registerInstagramAccount($instagram,$request->category,$client->id, $client->bots);
+
+                if($res) {
+                    $data = $this->model->find($client->id);
+                    $data->load('account');
+                    return ['status' => 'Вы были успешно зарегистрированы, и будите перенаправлены на страницу авторизации через 3 секунды.' ,'type'=> 'success'];
+                }
+
+                $del = $this->deleteClient($client->id);
+
+                if($del){
+                    return ['status' => 'Произошла ошибка при регистрации!' ,'type'=> 'error'];
+                }else{
+                    return ['status' => 'Произошла критическая ошибка!' ,'type'=> 'error'];
+                }
+            }
+        }
+        else{
+            return ['status' => 'Не удалось найти инстаграм аккаунт с именем '.$request->instagram_login.'!' ,'type'=> 'error'];
+        }
+
+    }
+
     public function updateClient($request,$id){
 
         $array = [];

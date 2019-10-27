@@ -15,26 +15,9 @@ class InstagramAndroidApi
 
     private $rankToken;
 
-    public static function getInstance($donor){
+    private $nextMaxId = false;
 
-        if (self::$_instance == null) {
-            self::$_instance = new InstagramAndroidApi();
-            self::$_instance->connect($donor);
-        }
-
-        self::$_instance->connect($donor);
-        return self::$_instance;
-    }
-
-
-    private function __construct() {}
-    private function __sleep() {}
-    private function __wakeup() {}
-    private function __clone() {}
-
-
-   public function connect($donor){
-
+    public function __construct($donor) {
         $debug = false;
         $truncatedDebug = false;
 
@@ -43,21 +26,19 @@ class InstagramAndroidApi
 
         try {
 
-        if(!empty($donor->proxy)){
-            $donorProxyString = 'http://'.$donor->proxy->name.':'.$donor->proxy->password.'@'.$donor->proxy->ip.':'.$donor->proxy->port;
-            $this->android->setProxy($donorProxyString);}
+            if(!empty($donor->proxy)){
+                $donorProxyString = 'http://'.$donor->proxy->name.':'.$donor->proxy->password.'@'.$donor->proxy->ip.':'.$donor->proxy->port;
+                $this->android->setProxy($donorProxyString);}
 
-        //Проходим авторизацию
-        $this->android->login($donor->name,$donor->password);
+            //Проходим авторизацию
+            $this->android->login($donor->name,$donor->password);
 
         }catch (\Exception $e){
             //Если не авторизовался отключаемся
             $donor_rep = new InstagramDonorRepository(new InstagramDonor());
             $res = $donor_rep->updateStatus($donor->id,0);
         }
-
     }
-
 
     public function getFollowers($instagramId){
 
@@ -93,6 +74,46 @@ class InstagramAndroidApi
 
     public function __destruct(){
         $this->android->logout();
+    }
+
+    public function getPageFollowers($instagramId,$nextMaxId = null, $rankToken = null){
+
+        //105 - 20 309
+
+        $followers = [];
+
+        $count = 0;
+
+        $maxId = null;
+
+        if(!empty($nextMaxId)){
+            $maxId = $nextMaxId;
+        }
+
+        if(!empty($rankToken)){
+            $this->rankToken = $rankToken;
+        }
+
+        do {
+            $response = $this->android->people->getFollowers($instagramId,$this->rankToken,null,$maxId);
+            $followers = array_merge($followers, $response->getUsers());
+            $maxId = $response->getNextMaxId();
+            $this->nextMaxId = $maxId;
+            ++$count;
+            if($count == 105){
+                return $followers;
+            }
+        } while ($maxId !== null);
+
+        return $followers;
+    }
+
+    public function getNexMaxId(){
+        return $this->nextMaxId;
+    }
+
+    public function getRankToken(){
+        return $this->rankToken;
     }
 
 }

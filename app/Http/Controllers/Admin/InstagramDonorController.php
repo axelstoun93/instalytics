@@ -92,14 +92,17 @@ class InstagramDonorController extends AdminController
             $result = ['status' => 'Донор '.$donor->name.' активен','type'=> 'success'];
             try {
 
-                $androidAPI = InstagramAndroidApi::getInstance($donor);
+                $androidAPI = new InstagramAndroidApi($donor);
                 $androidAPI->getIdByLogin($donor->name);
                 $this->d_rep->updateStatus($request->id,1);
+                $androidAPI->__destruct();
 
                 echo json_encode($result);
                 die;
 
-            }catch (\Exception $e){}
+            }catch (\Exception $e){
+                echo $e->getMessage();
+            }
         }
 
     }

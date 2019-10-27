@@ -41,8 +41,6 @@
     {!! $content !!}
 @endsection
 
-
-
 @section('script')
 
     <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/vendors.min.js"></script>
@@ -127,8 +125,4 @@
 
     </script>
 
-@endsection
-
-@section('noPhone')
-    {!! (!empty($noPhone)) ? $noPhone : '' !!}
 @endsection

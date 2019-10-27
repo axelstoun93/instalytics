@@ -1,7 +1,8 @@
 <?php
 return [
+  'theme'  => 'site',
   'theme-admin' => 'admin',
-  'theme-client' => 'client',
+  /*'theme-client' => 'client',*/
   'ajax' => 'ajax',
   'default-password' => 'promotion',
   'cookie_dir' => base_path('storage/app/cookie'),

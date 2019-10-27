@@ -7,7 +7,7 @@ abstract class Repository extends Controller
 
     function all()
     {
-       $result =  $this->model->all();
+       $result = $this->model->all();
        return $result;
     }
 

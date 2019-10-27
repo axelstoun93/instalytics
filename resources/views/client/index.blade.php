@@ -112,7 +112,3 @@
         })(window, document, jQuery);
     </script>
 @endsection
-
-@section('noPhone')
-    {!! $noPhone !!}
-@endsection

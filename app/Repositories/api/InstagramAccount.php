@@ -4,7 +4,6 @@ namespace App\Repositories\Api;
 
 use App\Proxy;
 use App\Repositories\ProxyRepository;
-use phpDocumentor\Reflection\Types\Compound;
 
 class InstagramAccount extends Instagram
 {
@@ -26,7 +25,7 @@ class InstagramAccount extends Instagram
         if(!$jsonData = $this->validateCurl($url)){
             return false;
         }
-        
+
         if(!empty($jsonData["entry_data"])){
             $this->follower = $jsonData["entry_data"]["ProfilePage"][0]["graphql"]["user"]["edge_followed_by"]["count"];
             $this->following = $jsonData["entry_data"]["ProfilePage"][0]["graphql"]["user"]["edge_follow"]["count"];
@@ -70,9 +69,9 @@ class InstagramAccount extends Instagram
 
     function validateCurl($url){
 
-        $proxy = new ProxyRepository(new Proxy());
+        //$proxy = new ProxyRepository(new Proxy());
 
-        $proxy = $proxy->getValidateProxyFirst();
+        //$proxy = $proxy->getValidateProxyFirst();
 
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$url);
@@ -81,10 +80,13 @@ class InstagramAccount extends Instagram
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        /*
         curl_setopt($ch, CURLOPT_PROXYPORT,  $proxy->port);
         curl_setopt($ch, CURLOPT_PROXYTYPE, 'HTTP');
         curl_setopt($ch, CURLOPT_PROXY,  $proxy->ip );
         curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy->name.':'.$proxy->password);
+        */
 
         $html = curl_exec($ch);
         curl_close($ch);

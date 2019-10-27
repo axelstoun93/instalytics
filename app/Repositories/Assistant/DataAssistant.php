@@ -68,6 +68,21 @@ class DataAssistant
         return $date->format('Y-m-d');
     }
 
+    //Когда пользователь сможет поставить аккаунт сново на проверку
+    static function nextDateMonth($time){
+        $date = new \DateTime($time);
+        $date->modify('+30 day');
+        return $date->format('Y-m-d');
+    }
+
+
+    //Функция возврощает дату которая будет чере $count дней
+    static function nextCountDay($count){
+        $date = new \DateTime();
+        $date->modify("+$count day");
+        return $date->format('Y-m-d');
+    }
+
 
 
 

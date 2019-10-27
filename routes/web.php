@@ -11,19 +11,62 @@
 |
 */
 
-Route::get('/',['uses' => 'Auth\LoginController@showLoginForm']);
-Route::post('/','Auth\LoginController@login')->name('login');
+Route::get('/login',['uses' => 'Auth\LoginController@showLoginForm']);
+Route::post('/login','Auth\LoginController@login')->name('login');
 Route::post('logout','Auth\LoginController@logout')->name('logout');
 
-/*Route::get('reset','Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('reset','Auth\ResetPasswordController@reset');
-Route::post('email','Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');*/
 
+//Регистрация нового пользователя
+Route::get('/register','Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('/register','Auth\RegisterController@registerClient')->name('register');
 
-/*Route::post('email','Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+//Восстановление пароля
 Route::get('reset','Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('reset','Auth\ResetPasswordController@reset');
-Route::get('reset/{token}','Auth\ResetPasswordController@showResetForm')->name('password.reset');*/
+Route::post('reset','Auth\ResetPasswordController@reset')->name('password.update');
+Route::post('email','Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('reset/{token}','Auth\ResetPasswordController@showResetForm')->name('password.reset');
+
+/* сайт */
+Route::resource('/','Site\IndexController',[
+    'only' =>['index'],
+    'names' => ['index'=>'site']
+]);
+
+//FAQ
+Route::resource('/faq','Site\FaqController',[
+    'names' => [
+        'index'=>'faq',
+    ]
+]);
+
+//Инструкция
+Route::resource('/information','Site\InformationController',[
+    'names' => [
+        'index'=>'information',
+    ]
+]);
+
+//Пользовательское соглашение
+Route::resource('/agreement','Site\AgreementController',[
+    'names' => [
+        'index'=>'agreement',
+    ]
+]);
+
+//Правила безопасности
+Route::resource('/security','Site\SecurityController',[
+    'names' => [
+        'index'=>'security',
+    ]
+]);
+
+//Политика конфиденциальности
+Route::resource('/confidentiality','Site\ConfidentialityController',[
+    'names' => [
+        'index'=>'confidentiality',
+    ]
+]);
+/* сайт конец */
 
 
 /* Администратор */
@@ -84,8 +127,6 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
 
     Route::post('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.validate');
 
-    //Route::get('donor/validate/{id}/','Admin\InstagramDonorController@statusDonor')->name('donor.getValidate');
-
     Route::resource('/instagram','Admin\InstagramController',[
         'names' => [
             'index' => 'instagram',
@@ -97,6 +138,8 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
             'update' => 'instagram.update'
         ]
     ]);
+
+    Route::post('/instagram/check','Admin\InstagramController@checkAccount')->name('instagram.check');
 
     Route::resource('/top','Admin\TopAccountController',[
         'names' => [
@@ -118,33 +161,28 @@ Route::group(['prefix'=> 'administrator','middleware' => ['auth','administrator'
         ]
     ]);
 
-
-
-
-  /*  Route::resource('/test','CronController',[
-        'names' => [
-            'index' => 'CronController',
-            'store' => 'CronController.store',
-            'show' => 'CronController.show',
-            'destroy' => 'CronController.destroy',
-            'create' => 'CronController.create',
-            'edit' => 'CronController.edit',
-            'update' => 'CronController.update'
-        ]
-    ]);
-*/
-
 });
+
+/* Teсты */
 
 /*Route::get('/init','CronController@init');
 Route::get('/getTask','CronController@getTask');
 Route::get('/getAndroidTask','CronController@getAndroidTask');
 Route::get('/deleteTest','CronController@clearFollowerUserList');*/
-
-Route::get('/getTask','CronController@getTaskNew');
-
+//Route::get('/getTask','CronController@getTaskNew');
 //Route::get('/botInit','AccountCronController@init');
 //Route::get('/checkBotsAccount','AccountCronController@checkAccountFollowers');
+
+//Route::get('/getAndroidTaskTest','CronController@getAndroidTaskTest');
+//Route::get('/getTask','CronController@getTaskNew');
+//Route::get('/botInit','AccountCronController@init');
+Route::get('/init','CronController@init');
+Route::get('/getTask','CronController@getTaskNew');
+Route::get('/getAndroidTask','CronController@getAndroidTaskTest');
+Route::get('/botInit','AccountCronController@init');
+/* Teсты конец */
+
+Route::get('/checkBotsAccount','AccountCronController@checkAccountFollowers');
 
 /* Клиент */
 Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function ()
@@ -158,6 +196,9 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
         ]
     ]);
 
+
+    Route::post('/check','Client\StatisticController@checkAccount')->name('clientInstagram.check');
+
     Route::resource('/analytic','Client\AnalyticController',[
         'names' => [
             'index' => 'analyticStatistic',
@@ -170,12 +211,22 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
         ]
     ]);
 
+
+    //Политика конфиденциальности
     Route::resource('/police','Client\PoliceController',[
         'only' =>['index'],
         'names' => [
             'index' => 'police'
         ]
     ]);
+
+    Route::resource('/pay','Client\PayController',[
+        'only' =>['index'],
+        'names' => [
+            'index' => 'clientPay'
+        ]
+    ]);
+
 
 
     //Настройки профиля клиента
@@ -199,5 +250,4 @@ Route::group(['prefix'=> 'client','middleware' => ['auth','client']], function (
 
 
 /* Общий ajax контроллер */
-
 Route::post('/ajax/FollowUnfollowAccount/{id}','AjaxController@getFollowUnfollowAccount')->name('FollowUnfollowAccount');

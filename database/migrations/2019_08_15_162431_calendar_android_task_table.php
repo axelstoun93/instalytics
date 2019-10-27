@@ -17,6 +17,8 @@ class CalendarAndroidTaskTable extends Migration
             $table->increments('id');
             $table->bigInteger('instagram_id');
             $table->string('login');
+            $table->string('rank_token');
+            $table->string('next_max_id');
             $table->timestamps();
         });
     }

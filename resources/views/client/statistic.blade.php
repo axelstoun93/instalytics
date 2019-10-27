@@ -33,18 +33,17 @@
     <!-- END Custom CSS-->
 
 @endsection
+
 @section('navigation')
     {!! $navigation !!}
 @endsection
+
 @section('leftMenu')
     {!! $leftMenu !!}
 @endsection
+
 @section('content')
     {!! $content !!}
-@endsection
-
-@section('noPhone')
-    {!! (!empty($noPhone)) ? $noPhone : '' !!}
 @endsection
 
 @section('script')

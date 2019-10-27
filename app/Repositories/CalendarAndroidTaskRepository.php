@@ -21,7 +21,7 @@ class CalendarAndroidTaskRepository extends Repository
 
     //Получаем часть аккаунтов по которым будем получать данные
     function getOnePart(){
-        $res = $this->model->select('id','instagram_id','login')->take(1)->get();
+        $res = $this->model->select('id','instagram_id','login','rank_token','next_max_id')->take(3)->get();
         return $res;
     }
 
@@ -44,6 +44,12 @@ class CalendarAndroidTaskRepository extends Repository
     function deleteAllAccount(){
         $res = $this->model->truncate();
         return $res;
+    }
+
+    //Обновляем запись
+    function update($id,$array){
+        $account = $this->model->find($id)->fill($array)->update();
+        return $account;
     }
 
     function isEmpty(){

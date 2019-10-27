@@ -17,19 +17,31 @@
                                 </div>
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="{{ route('password.email') }}" novalidate>
+                                        @if (session('status'))
+                                            <div class="alert alert-success" role="alert">
+                                                {{ session('status') }}
+                                            </div>
+                                        @endif
+                                            @if ($errors->has('email'))
+                                                <div class="alert alert-warning" role="alert">
+                                                   {{ $errors->first('email') }}
+                                                </div>
+                                            @endif
+
+                                        <form class="form-horizontal" action="{{ route('password.email') }}" method="post">
+                                            {{ csrf_field() }}
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="email" class="form-control form-control-lg" id="user-email" placeholder="Your Email Address" required>
+                                                <input type="email" name="email" class="form-control form-control-lg" id="user-email" placeholder="Укажите свой E-mail адрес" required>
                                                 <div class="form-control-position">
                                                     <i class="ft-mail"></i>
                                                 </div>
                                             </fieldset>
-                                            <button type="submit" class="btn btn-outline-primary btn-lg btn-block"><i class="ft-unlock"></i> Recover Password</button>
+                                            <button type="submit" class="btn btn-outline-primary btn-lg btn-block"><i class="ft-unlock"></i> Восстановить пароль</button>
                                         </form>
                                     </div>
                                 </div>
-                                <div class="card-footer border-0">
-                                    <p class="float-sm-left text-center"><a href="{{route('login')}}" class="card-link">Login</a></p>
+                                <div class="card-footer border-0 text-center">
+                                    <p class="float-sm-left text-center"><a href="{{route('login')}}" class="card-link">Вход</a></p>
                                 </div>
                             </div>
                         </div>

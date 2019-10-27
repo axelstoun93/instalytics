@@ -8,6 +8,13 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta property="og:title" content="Честный сервис статистики datalytics.pro"/>
+    <meta property="og:site_name" content="datalytics.pro"/>
+    <meta property="og:url" content="http://datalytics.pro/"/>
+    <meta property="og:description" content="Контролируйте приросты и оттоки аудитории, проверьте аккаунт на ботов, получайте ежедневные списки, кто подписался и отписался от вас с уникальным сервисом datalytics.pro. Зарегистрируйтесь и получите 3 дня бесплатно!"/>
+    <meta property="og:image" content="http://datalytics.pro/site/images/datalytics.jpg"/>
+
     <title>Инстаграм - Статистика</title>
     <link rel="apple-touch-icon" href="{{asset(config('setting.theme-admin'))}}/app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset(config('setting.theme-admin'))}}/app-assets/images/ico/favicon.ico">
@@ -30,10 +37,6 @@
     @yield('css')
     <!-- END Page Level CSS-->
 
-    <!-- BEGIN Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/assets/css/style.css">
-    <!-- END Custom CSS-->
-
 </head>
 <body class="vertical-layout vertical-menu-modern 2-columns menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
 
@@ -44,8 +47,8 @@
             <ul class="nav navbar-nav flex-row position-relative">
                 <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item mr-auto"><a class="navbar-brand" href="{{route('admin')}}"><img class="brand-logo" alt="stack admin logo" src="{{asset(config('setting.theme-admin'))}}/app-assets/images/logo/stack-logo-light.png">
-                        <h2 class="brand-text">Instalytics</h2></a></li>
-                <li class="nav-item d-none d-md-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white" data-ticon="ft-toggle-right"></i></a></li>
+                        <h2 class="brand-text">DATALYTICS</h2></a></li>
+                <li class="nav-item d-none d-md-block nav-toggle"><a class="nav-link modern-nav-toggle left-menu-switch pr-0" data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white" data-ticon="ft-toggle-right"></i></a></li>
                 <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-ellipsis-v"></i></a></li>
             </ul>
         </div>
@@ -73,7 +76,7 @@
 
 
 <footer class="footer footer-static footer-light navbar-border">
-    <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2019 <a class="text-bold-800 grey darken-2" href="http://instalytics.pro/" target="_blank">instalytics.pro</a>, All rights reserved. </span></p>
+    <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2019 <a class="text-bold-800 grey darken-2" href="http://datalytics.pro/" target="_blank">datalytics.pro</a>, All rights reserved. </span></p>
 </footer>
 
 @yield('script')

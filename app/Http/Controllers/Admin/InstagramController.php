@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\InstagramAccount as InstagramModelAccount;
+use App\InstagramAccountCheck;
+use App\Repositories\Assistant\DataAssistant;
 use App\Repositories\FollowListRepository;
+use App\Repositories\InstagramAccountCheckRepository;
 use App\Repositories\UnFollowListRepository;
 use App\UnFollowList;
 use App\FollowList;
@@ -31,16 +34,19 @@ class InstagramController extends AdminController
     protected $c_rep;
     protected $follow_rep;
     protected $unfollow_rep;
-
+    protected $account_check_rep;
 
     function __construct()
     {
         parent::__construct(new AdminMenuRepository(new AdminMenu));
+
         $this->a_rep = new InstagramAccountRepository(new InstagramModelAccount());
         $this->s_rep = new StatisticRepository(new Statistic());
         $this->c_rep = new InstagramCategoryRepository(new InstagramAccountCategory());
         $this->follow_rep = new FollowListRepository(new FollowList());
         $this->unfollow_rep = new UnFollowListRepository(new UnFollowList());
+        $this->account_check_rep = new InstagramAccountCheckRepository(new InstagramAccountCheck());
+
         $this->template = 'instagram';
     }
 
@@ -106,9 +112,49 @@ class InstagramController extends AdminController
 
         $followListDate = $this->follow_rep->getFollowListDate($instagramId);
 
-        $content = view(config('setting.theme-admin').'.instagramShow')->with(['page' => $this->page, 'client' => $client,'statistic' => $statistic ,'info' => $info,'follow' => $follow,'unfollow' => $unfollow,'followListDate' => $followListDate])->render();
+        $accountFollowersValidate = $this->account_check_rep->getJsonDataById($instagramId);
+
+        $content = view(config('setting.theme-admin').'.instagramShow')->with(['page' => $this->page, 'client' => $client,'statistic' => $statistic ,'info' => $info,'follow' => $follow,'unfollow' => $unfollow,'followListDate' => $followListDate,'accountFollowersValidate' => $accountFollowersValidate])->render();
+
         $this->vars = array_add($this->vars,'content',$content);
         return $this->renderOutput();
+    }
+
+
+    public function checkAccount(Request $request){
+
+        $instagramId = (int)$request->instagramId;
+
+        //Делаем проверку аккаунта
+
+        //Проверяем аккаунт в очереди
+        $res = $this->account_check_rep->getByInstagramId($instagramId);
+
+        if(empty($res)){
+
+             $create = $this->account_check_rep->create($instagramId);
+
+             if($create) {
+                 $status = ['status' => 'Аккаунт поставлен в очередь на проверку!','type'=> 'success'];
+             }else {
+                 $status = ['status' => 'Произошла ошибка!','type'=> 'error'];
+             }
+
+             echo  json_encode($status);
+             die;
+        }elseif($res->status === 0){
+            $status = ['status' => 'Аккаунт уже стоит в очереди на проверку!','type'=> 'info'];
+            echo  json_encode($status);
+            die;
+        }else{
+            $nowDate = DataAssistant::nowDay();
+            $update = $this->account_check_rep->updateByInstagramId($instagramId,['status' => 0,'date' => $nowDate]);
+            $status = ['status' => 'Аккаунт поставлен в очередь на проверку!','type'=> 'success'];
+            echo  json_encode($status);
+            die;
+        }
+
+
     }
 
     /**

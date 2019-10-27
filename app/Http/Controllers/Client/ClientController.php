@@ -33,11 +33,6 @@ abstract class ClientController extends Controller
         $leftMenu = view('layouts.'.config('setting.theme-client').'.leftMenuBar')->with('menu',$menu)->render();
         $this->vars = array_add($this->vars,'leftMenu', $leftMenu);
 
-          if(empty($userInfo->phone)){
-              $noPhone = view('layouts.'.config('setting.theme-client').'.noPhone')->render();
-              $this->vars = array_add($this->vars,'noPhone', $noPhone);
-          }
-
         return view(config('setting.theme-client').'.'.$this->template)->with($this->vars);
 
     }

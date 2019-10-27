@@ -140,7 +140,7 @@ class StatisticRepository extends Repository
         $accountModel = new InstagramAccountRepository(new InstagramModelAccount());
 
         if($category){
-            $getCurrentAccount = $accountModel->getCurrentAccountandCategory($category);
+            $getCurrentAccount = $accountModel->getCurrentAccountAndCategory($category);
         }else{
             $getCurrentAccount = $accountModel->getCurrentAccount();
         }
@@ -212,10 +212,11 @@ class StatisticRepository extends Repository
         $accountModel = new InstagramAccountRepository(new InstagramModelAccount());
 
         if($category){
-            $getCurrentAccount = $accountModel->getCurrentAccountandCategory($category);
+            $getCurrentAccount = $accountModel->getCurrentAccountAndCategory($category);
         }else{
             $getCurrentAccount = $accountModel->getCurrentAccount();
         }
+
 
         $oldAccountDate = $this->model->where('date', '=', $oldDate)->get();
 
@@ -256,9 +257,6 @@ class StatisticRepository extends Repository
         }
 
         return $result;
-
-
-
 
 
     }

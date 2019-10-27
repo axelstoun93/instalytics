@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description" content="">
     <meta name="keywords" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Статистика по продвижению - instalytics.pro</title>
+    <meta property="og:title" content="Честный сервис статистики datalytics.pro"/>
+    <meta property="og:site_name" content="datalytics.pro"/>
+    <meta property="og:url" content="http://datalytics.pro/"/>
+    <meta property="og:description" content="Контролируйте приросты и оттоки аудитории, проверьте аккаунт на ботов, получайте ежедневные списки, кто подписался и отписался от вас с уникальным сервисом datalytics.pro. Зарегистрируйтесь и получите 3 дня бесплатно!"/>
+    <meta property="og:image" content="http://datalytics.pro/site/images/datalytics.jpg"/>
+
+
+    <title>Статистика по продвижению - datalytics.pro</title>
 
     <link rel="apple-touch-icon" href="{{asset(config('setting.theme-admin'))}}/app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset(config('setting.theme-admin'))}}/app-assets/images/ico/favicon.ico">
@@ -18,6 +26,8 @@
     <!-- END VENDOR CSS-->
     <!-- BEGIN STACK CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/css/extensions/toastr.css">
+    <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/plugins/extensions/toastr.css">
     <!-- END STACK CSS-->
     <!-- BEGIN Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset(config('setting.theme-admin'))}}/app-assets/css/core/menu/menu-types/horizontal-menu.css">
@@ -31,12 +41,7 @@
 <body class="horizontal-layout horizontal-menu 1-column   menu-expanded blank-page blank-page" data-open="hover" data-menu="horizontal-menu" data-col="1-column">
 
 @yield('content')
+@yield('script')
 
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/vendors.min.js"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/core/app-menu.js"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/core/app.js"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/js/scripts/forms/form-login-register.js"></script>
 </body>
 </html>

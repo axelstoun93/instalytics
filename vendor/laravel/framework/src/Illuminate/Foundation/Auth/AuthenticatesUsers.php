@@ -65,7 +65,7 @@ trait AuthenticatesUsers
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            $this->username() => 'required|string',
+            $this->username($request) => 'required|string',
             'password' => 'required|string',
         ]);
     }
@@ -91,7 +91,7 @@ trait AuthenticatesUsers
      */
     protected function credentials(Request $request)
     {
-        return $request->only($this->username(), 'password');
+        return $request->only($this->username($request), 'password');
     }
 
     /**
@@ -133,7 +133,7 @@ trait AuthenticatesUsers
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
-            $this->username() => [trans('auth.failed')],
+            $this->username($request) => [trans('auth.failed')],
         ]);
     }
 
@@ -142,9 +142,17 @@ trait AuthenticatesUsers
      *
      * @return string
      */
-    public function username()
+    public function username(Request $request)
     {
-        return 'name';
+        $email = filter_var($request->name, FILTER_VALIDATE_EMAIL);
+        if($email){
+
+            $request['email'] = $request->name;
+
+            return 'email';
+        }else{
+            return 'name';
+        }
     }
 
     /**

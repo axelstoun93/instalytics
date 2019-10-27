@@ -50,7 +50,7 @@
                                         <thead>
                                         <tr>
                                             <th>Аватар</th>
-                                            <th>Идентификатор</th>
+                                            <th>Логин</th>
                                             <th>Аккаунт</th>
                                             <th>Аккаунт_старый</th>
                                             <th>Имя</th>
@@ -69,7 +69,7 @@
                                                          <img src="/{{$account->avatar}}" width="64" height="64">
                                                     </a>
                                                 </td>
-                                                <td>{{$account->instagram_id}}</td>
+                                                <td>{{$account->user->name}}</td>
                                                 <td>{{$account->login}}</td>
                                                 <td>{{$account->old_login}}</td>
                                                 <td>{{$account->name}}</td>

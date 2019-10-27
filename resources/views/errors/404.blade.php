@@ -49,7 +49,7 @@
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="row">
-                                <p class="text-muted text-center col-12 py-1">© 2019 <a href="http://instalytics.pro/" target="_blank">instalytics.pro </a>Ручной работы и сделано с <i class="ft-heart pink"></i></p>
+                                <p class="text-muted text-center col-12 py-1">© 2019 <a href="http://datalytics.pro/" target="_blank">datalytics.pro </a>Ручной работы и сделано с <i class="ft-heart pink"></i></p>
                             </div>
                         </div>
                     </div>

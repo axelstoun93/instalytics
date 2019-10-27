@@ -121,27 +121,68 @@
                     </div>
         </section>
         @endif
-
-
-            <div class="col-md-12">
-                <section class="panel">
-                    <header class="panel-heading">
-                        <div class="panel-actions">
-                            <a href="#" class="fa fa-caret-down"></a>
-                            <a href="#" class="fa fa-times"></a>
+            <section id="bot-statistic-div">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Проверка аудитории аккаунта</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body card-dashboard">
+                                    @if(!empty($accountFollowersValidate) and $accountFollowersValidate['data']->status === 1)
+                                    <div id="botsDiagram" class="echart-container" style="width: 100%;height: 100%;min-height: 460px;text-align: center;"></div>
+                                    <div class="accountFollowersValidateDetails" style="text-align: center;padding: 10px 0;">
+                                        <p>Дата проверки аккаунта: {{$accountFollowersValidate['data']->date_rus}} г.</p>
+                                        <p>Количество подписчиков на момент проверки: {{$accountFollowersValidate['data']->followers}} </p>
+                                    </div>
+                                        <div class="accountFollowersButtonDiv" style="text-align: center">
+                                            <a href="#" id="accountFollowersButton" data-url="{{route('instagram.check')}}" data-instagram-id="{{$client->account->instagram_id}}" class="btn btn-primary">
+                                                <i class="fa fa-search"></i> Проверить аккаунт
+                                            </a>
+                                        </div>
+                                    @elseif(!empty($accountFollowersValidate) and $accountFollowersValidate['data']->status === 0)
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card" style="text-align: center;padding: 20px 20px 0 20px">
+                                                    <div class="alert alert-icon-right alert-info alert-dismissible mb-2" role="alert">
+                                                        Мы еще собираем данные по аккаунту обычно это занимает 1-2 дня!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card" style="text-align: center;padding: 20px 20px 0 20px">
+                                                    <div class="alert alert-icon-right alert-info alert-dismissible mb-2" role="alert">
+                                                        Аккаунт не стоит в очереди на проверку аудитории!
+                                                    </div>
+                                                    <div class="accountFollowersButtonDiv" style="padding: 20px 0;text-align: center">
+                                                        <a href="#" id="accountFollowersButton" data-url="{{route('instagram.check')}}" data-instagram-id="{{$client->account->instagram_id}}" class="btn btn-primary">
+                                                            <i class="fa fa-search"></i> Проверить аккаунт
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
 
-                        <h2 class="panel-title">Pie Chart</h2>
-                        <p class="panel-subtitle">Default Pie Chart</p>
-                    </header>
-                    <div class="panel-body">
-                        <!-- Flot: Pie -->
-                        <div id="chartdiv"></div>
                     </div>
-                </section>
-            </div>
-
-
+                </div>
+            </section>
 
         @if(!empty($statistic['data']))
 
@@ -150,7 +191,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Детальная статистика</h4>
+                                    <h4 class="card-title">Итоговая статистика по счетчику подписчиков</h4>
                                     <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
@@ -310,7 +351,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Детальный график</h4>
+                                    <h4 class="card-title">Детальный график прироста и оттока аудитории</h4>
                                     <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
@@ -399,7 +440,7 @@
 <script src="{{asset(config('setting.theme-admin'))}}/assets/js/custom/admin/instagram.js"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/amcharts.js" type="text/javascript"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/serial.js" type="text/javascript"></script>
-<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/pue" type="text/javascript"></script>
+<script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/pie.js" type="text/javascript"></script>
 <script src="{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/amcharts/themes/light.js" type="text/javascript"></script>
 <!-- 2. Include library -->
 
@@ -422,7 +463,7 @@
             [
                 'echarts',
                 'echarts/chart/bar',
-                'echarts/chart/line'
+                'echarts/chart/line',
             ],
 
 
@@ -647,74 +688,160 @@
 
 
     });
+</script>
+
+
+<!-- bots -->
+<script>
+    $(window).on("load", function(){
+
+        // Set paths
+        // ------------------------------
+
+        require.config({
+            paths: {
+                echarts: '{{asset(config('setting.theme-admin'))}}/app-assets/vendors/js/charts/echarts'
+            }
+        });
+
+
+        // Configuration
+        // ------------------------------
+
+        require(
+            [
+                'echarts',
+                'echarts/chart/pie',
+                'echarts/chart/bar'
+            ],
+
+
+            // Charts setup
+            function (ec) {
+                // Initialize chart
+                // ------------------------------
+                var botsChart = ec.init(document.getElementById('botsDiagram'));
+
+                var accountFollowersValidate = @if(!empty($accountFollowersValidate['json'])) {!!$accountFollowersValidate['json']!!}; @else ''; @endif
+                var login = 'Аккаунт - ' + '{!!$client->account->login!!}';
+
+                // ------------------------------
+                chartOptions = {
+
+                    // Add title
+                    title: {
+                        text: 'Диаграмма аудитории',
+                        subtext: login,
+                        x: 'center'
+                    },
 
 
 
-    AmCharts.addInitHandler(function(chart) {
-        if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
-            return;
+                    // Add legend
+                    legend: {
+                        orient: 'horizontal',
+                        x: 'center',
+                        y: 'bottom',
+                        data: accountFollowersValidate
+                    },
 
-        // init fields
-        var titleField = chart.titleField;
-        var legendTitleField = chart.titleField+"Legend";
+                    color: ['#0088cc', '#2baab1', '#E36159'],
 
-        // iterate through the data and create truncated label properties
-        for(var i = 0; i < chart.dataProvider.length; i++) {
-            var label = chart.dataProvider[i][chart.titleField];
-            if (label.length > chart.legend.truncateLabels)
-                label = label.substr(0, chart.legend.truncateLabels-1)+'...'
-            chart.dataProvider[i][legendTitleField] = label;
-        }
+                    toolbox: {
+                        show: true,
+                        orient: 'vertical',
+                        feature: {
+                            mark: {
+                                show: false
+                            },
+                            dataView: {
+                                show: true,
+                                readOnly: true,
+                                title: 'Просмотр данных',
+                                lang: ['Просмотр данных диаграммы', 'Закрыть', 'Обновить']
+                            },
+                            restore: {
+                                show: true,
+                                title: 'Обновить'
+                            },
+                            saveAsImage: {
+                                show: true,
+                                title: 'Сохранить',
+                                lang: ['Save']
+                            }
+                        }
+                    },
 
-        // replace chart.titleField to show our own truncated field
-        chart.titleField = legendTitleField;
+                    // Enable drag recalculate
+                    calculable: true,
 
-        // make the balloonText use full title instead
-        chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
+                    // Add series
+                    series: [
+                        {
+                            name: 'Данные',
+                            type: 'pie',
+                            radius: ['50%', '70%'],
+                            center: ['50%', '54.0%'],
 
-    }, ["pie"]);
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        formatter: '{b}: {c} ({d}%)'
 
-    /**
-     * Create the chart
-     */
-    var chart = AmCharts.makeChart("chartdiv", {
-        "type": "pie",
-        "theme": "light",
-        "labelsEnabled": false,
-        "legend": {
-            "markerType": "circle",
-            "position": "right",
-            "marginRight": 80,
-            "autoMargins": false,
-            "truncateLabels": 25 // custom parameter
-        },
-        "dataProvider": [{
-            "country": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non.",
-            "litres": 256.9
-        }, {
-            "country": "Etiam vel convallis ipsum, vel egestas ligula. Cras sed magna.",
-            "litres": 131.1
-        }, {
-            "country": "Nulla nec tristique dolor. Mauris gravida est non tempus elementum.",
-            "litres": 115.8
-        }, {
-            "country": "Vivamus commodo porta risus, eu sollicitudin eros pretium nec. Aenean.",
-            "litres": 109.9
-        }, {
-            "country": "Sed efficitur quis orci a elementum. Sed turpis ligula, commodo.",
-            "litres": 108.3
-        }, {
-            "country": "Sed convallis congue nisi et ullamcorper. Mauris eleifend eu est.",
-            "litres": 65
-        }, {
-            "country": "Pellentesque leo sapien, ornare sed ligula id, hendrerit sollicitudin elit.",
-            "litres": 40
-        }],
-        "valueField": "litres",
-        "titleField": "country",
-        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>"
+                                    },
+                                    labelLine: {
+                                        show: true
+                                    }
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        formatter: '{b}' + '\n\n' + '{c} ({d}%)',
+                                        position: 'center',
+                                        textStyle: {
+                                            fontSize: '17',
+                                            fontWeight: '500'
+                                        }
+                                    }
+                                }
+                            },
+
+                            data: accountFollowersValidate
+                        }
+                    ]
+                };
+
+                // Apply options
+                // ------------------------------
+
+                botsChart.setOption(chartOptions);
+
+
+                // Resize chart
+                // ------------------------------
+
+                $(function () {
+
+                    // Resize chart on menu width change and window resize
+                    $(window).on('resize', resize);
+                    $(".menu-toggle").on('click', resize);
+
+                    // Resize function
+                    function resize() {
+                        setTimeout(function() {
+
+                            // Resize chart
+                            botsChart.resize();
+                        }, 200);
+                    }
+                });
+            }
+
+
+
+        );
     });
-
 </script>
 
 
